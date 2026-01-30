@@ -13,3 +13,145 @@ datasource db {
   provider = "postgresql"
 }
 
+model Meal {
+  id           String   @id @default(uuid())
+  provider_id  String
+  category_id  String
+  title        String   @db.VarChar(250)
+  description  String   @db.Text
+  price        Int
+  image_url    String
+  is_available Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  category   Category    @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  reviews    Review[]
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  meals Meal[]
+}
+
+enum Order_Status {
+  PENDING
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id           String       @id @default(uuid())
+  user_id      String
+  order_status Order_Status @default(PENDING)
+  total_price  Int
+  created_at   DateTime     @default(now())
+  orderItems   OrderItem[]
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model OrderItem {
+  id       String @id @default(uuid())
+  order_id String
+  meal_id  String
+  quantity Int
+  order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  meal     Meal   @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  author_id  String
+  meal_id    String
+  rating     Float
+  comment    String   @db.Text
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  meal Meal @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  user_id     String   @unique
+  description String   @db.Text
+  address     String
+  phone       String   @db.VarChar(20)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  role          String?   @default("CUSTOMER")
+  phone         String?
+  is_active     String?   @default("ACTIVE")
+  sessions      Session[]
+  accounts      Account[]
+  profile       Profile?
+  orders        Order[]
+  reviews       Review[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

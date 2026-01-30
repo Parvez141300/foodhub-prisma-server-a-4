@@ -25,6 +25,7 @@ model Meal {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
+  provider   User        @relation(fields: [provider_id], references: [id], onDelete: Cascade)
   category   Category    @relation(fields: [category_id], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
   reviews    Review[]
@@ -103,6 +104,7 @@ model User {
   profile       Profile?
   orders        Order[]
   reviews       Review[]
+  meals         Meal[]
 
   @@unique([email])
   @@map("user")

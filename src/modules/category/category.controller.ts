@@ -1,0 +1,17 @@
+
+import { RequestHandler } from "express";
+import { categoryService } from "./category.service";
+
+const createCategory: RequestHandler = async (req, res) => {
+    try {
+        const payload = req.body;
+        const result = await categoryService.createCategoryIntoDB(payload);
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const categoryController = {
+    createCategory,
+}

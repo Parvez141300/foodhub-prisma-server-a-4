@@ -9,6 +9,6 @@ const createCategoryIntoDB = async (payload: Category) => {
     return result;
 }
 
-export const mealService = {
+export const categoryService = {
     createCategoryIntoDB,
 }

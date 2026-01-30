@@ -5,7 +5,7 @@ import { auth } from "./lib/auth";
 import { mealRouter } from "./modules/meal/meal.route";
 
 export const app = express();
-app.all("/api/auth/{*any}", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 // middlewares
 app.use(express.json());
 app.use(cors());

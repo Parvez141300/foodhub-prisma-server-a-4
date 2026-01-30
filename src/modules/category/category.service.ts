@@ -3,6 +3,14 @@ import { prisma } from "../../lib/prisma"
 
 const createCategoryIntoDB = async (payload: Category) => {
     console.log(payload);
+    const categoryData = await prisma.category.findUnique({
+        where: {
+            name: payload.name,
+        },
+    });
+    if (categoryData) {
+        return { message: "Category already exists" };
+    }
     const result = await prisma.category.create({
         data: payload,
     });

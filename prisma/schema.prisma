@@ -32,9 +32,14 @@ model Meal {
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String @unique
-  meals Meal[]
+  id         String   @id @default(uuid())
+  name       String   @unique
+  created_by String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  creator User   @relation(fields: [created_by], references: [id])
+  meals   Meal[]
 }
 
 enum Order_Status {
@@ -89,22 +94,23 @@ model Profile {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  role          String?   @default("CUSTOMER")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  role          String?    @default("CUSTOMER")
   phone         String?
-  is_active     String?   @default("ACTIVE")
+  is_active     String?    @default("ACTIVE")
   sessions      Session[]
   accounts      Account[]
   profile       Profile?
   orders        Order[]
   reviews       Review[]
   meals         Meal[]
+  categories    Category[]
 
   @@unique([email])
   @@map("user")

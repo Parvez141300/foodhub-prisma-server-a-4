@@ -22,6 +22,7 @@ model Meal {
   price        Int
   image_url    String
   is_available Boolean  @default(true)
+  is_featured  Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 

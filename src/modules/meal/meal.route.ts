@@ -7,7 +7,7 @@ const router = Router();
 router.get("/meals", mealController.getAllOrSearchMeal);
 router.get("/meals/:mealId", mealController.getMealById);
 router.post("/provider/meals", mealController.createMeal);
-router.patch("/meals/:mealId", mealController.updateMealById);
-router.delete("/meals/:mealId", mealController.deleteMealById);
+router.patch("/provider/meals/:mealId", mealController.updateMealById);
+router.delete("/provider/meals/:mealId", mealController.deleteMealById);
 
 export const mealRouter = router;

@@ -1,8 +1,46 @@
 import { Meal } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
 
-const getAllOrSearchMealFromDB = async () => {
+const getAllOrSearchMealFromDB = async ({ search }: { search: string | undefined }) => {
 
+    const result = await prisma.meal.findMany({
+        where: search ? {
+            OR: [
+                {
+                    title: {
+                        contains: search as string,
+                        mode: "insensitive"
+                    },
+                },
+                {
+                    description: {
+                        contains: search as string,
+                        mode: "insensitive"
+                    },
+                },
+                {
+                    category: {
+                        name: {
+                            contains: search as string,
+                            mode: "insensitive"
+                        }
+                    },
+                },
+            ]
+        } : {},
+        include: {
+            category: {
+                select: {
+                    name: true
+                }
+            }
+        },
+        orderBy: {
+            created_at: "desc"
+        }
+    });
+
+    return result;
 }
 
 const createMealIntoDB = async (payload: Meal) => {

@@ -1,10 +1,12 @@
 import { Meal } from "../../../generated/prisma/client"
+import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
-const getAllOrSearchMealFromDB = async ({ search }: { search: string | undefined }) => {
-
-    const result = await prisma.meal.findMany({
-        where: search ? {
+const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, sort_order }: { search: string | undefined, page: number, limit: number, skip: number, sort_by: string, sort_order: string }) => {
+    console.log(sort_order);
+    const addCondition: MealWhereInput[] = [];
+    if (search) {
+        addCondition.push({
             OR: [
                 {
                     title: {
@@ -27,7 +29,18 @@ const getAllOrSearchMealFromDB = async ({ search }: { search: string | undefined
                     },
                 },
             ]
-        } : {},
+        });
+    }
+    const safeSortOrder = sort_order.toLowerCase() === 'desc' ? 'desc' : 'asc';
+    const result = await prisma.meal.findMany({
+        skip: skip,
+        take: limit,
+        where: {
+            AND: addCondition
+        },
+        orderBy: {
+            [sort_by]: safeSortOrder,
+        },
         include: {
             category: {
                 select: {
@@ -35,9 +48,6 @@ const getAllOrSearchMealFromDB = async ({ search }: { search: string | undefined
                 }
             }
         },
-        orderBy: {
-            created_at: "desc"
-        }
     });
 
     return result;

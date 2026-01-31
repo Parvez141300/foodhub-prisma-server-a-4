@@ -1,6 +1,7 @@
 
 import { RequestHandler } from "express";
 import { mealService } from "./meal.service"
+import { paginationAndSortingHelper } from "../../helpers/paginationAndSortingHelper";
 
 const getAllOrSearchMeal: RequestHandler = async (req, res) => {
     try {
@@ -8,7 +9,9 @@ const getAllOrSearchMeal: RequestHandler = async (req, res) => {
 
         const searchString = typeof search === "string" ? search : undefined;
 
-        const result = await mealService.getAllOrSearchMealFromDB({ search: searchString });
+        const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
+
+        const result = await mealService.getAllOrSearchMealFromDB({ search: searchString, page, limit, skip, sort_by, sort_order });
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

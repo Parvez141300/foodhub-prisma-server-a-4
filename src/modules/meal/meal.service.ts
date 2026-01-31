@@ -68,8 +68,32 @@ const createMealIntoDB = async (payload: Meal) => {
     return result;
 }
 
+const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload: Record<string, string> }) => {
+    const mealData = await prisma.meal.findUnique({
+        where: {
+            id: mealId
+        },
+        select: {
+            id: true
+        }
+    });
+    if(!mealData) {
+        throw new Error("To updaet Meal this meal does not exist");
+    }
+    const result = await prisma.meal.update({
+        where: {
+            id: mealId
+        },
+        data: {
+            ...payload
+        }
+    });
+    return result;
+}
+
 export const mealService = {
     getAllOrSearchMealFromDB,
     getMealByIdFromDB,
     createMealIntoDB,
+    updateMealByIdInDB,
 }

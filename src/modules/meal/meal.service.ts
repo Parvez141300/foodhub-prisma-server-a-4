@@ -3,7 +3,6 @@ import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
 const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, sort_order }: { search: string | undefined, page: number, limit: number, skip: number, sort_by: string, sort_order: string }) => {
-    console.log(sort_order);
     const addCondition: MealWhereInput[] = [];
     if (search) {
         addCondition.push({
@@ -50,7 +49,21 @@ const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, so
         },
     });
 
-    return result;
+    const totalItems = await prisma.meal.count({
+        where: {
+            AND: addCondition
+        }
+    });
+
+    return {
+        data: result,
+        pagination: {
+            totalItems,
+            currentPage: page,
+            limit: limit,
+            totalPages: Math.ceil(totalItems / limit),
+        }
+    };
 }
 
 const getMealByIdFromDB = async (mealId: string) => {

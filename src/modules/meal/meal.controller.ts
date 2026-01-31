@@ -47,9 +47,20 @@ const updateMealById: RequestHandler = async (req, res) => {
     }
 }
 
+const deleteMealById: RequestHandler = async (req, res) => {
+    try {
+        const { mealId } = req.params;
+        const result = await mealService.deleteMealByIdInDB({ mealId: mealId as string });
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 export const mealController = {
     getAllOrSearchMeal,
     getMealById,
     createMeal,
     updateMealById,
+    deleteMealById,
 }

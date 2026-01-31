@@ -74,18 +74,89 @@ const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload
             id: mealId
         },
         select: {
-            id: true
+            id: true,
+            provider_id: true,
         }
     });
-    if(!mealData) {
-        throw new Error("To updaet Meal this meal does not exist");
+    if (!mealData?.id) {
+        return { message: "To update Meal this meal does not exist" };
     }
+
+    const providerData = await prisma.user.findUnique({
+        where: {
+            id: mealData?.provider_id as string,
+        },
+        select: {
+            id: true,
+        }
+    });
+    if (providerData?.id !== mealData.provider_id) {
+        return { message: "creator is not valid to update meal's data" };
+    }
+
     const result = await prisma.meal.update({
         where: {
             id: mealId
         },
         data: {
             ...payload
+        },
+        select: {
+            id: true,
+            title: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
+        }
+    });
+    return result;
+}
+
+const deleteMealByIdInDB = async ({ mealId }: { mealId: string }) => {
+
+    const mealData = await prisma.meal.findUnique({
+        where: {
+            id: mealId
+        },
+        select: {
+            id: true,
+            provider_id: true,
+        }
+    });
+
+    if (!mealData?.id) {
+        return { message: "To delete Meal this meal does not exist" };
+    }
+
+    const providerData = await prisma.user.findUnique({
+        where: {
+            id: mealData?.provider_id as string,
+        },
+        select: {
+            id: true,
+        }
+    });
+
+    if (providerData?.id !== mealData.provider_id) {
+        return { message: "creator is not valid to delete meal's data" };
+    }
+
+    const result = await prisma.meal.delete({
+        where: {
+            id: mealId
+        },
+        select: {
+            id: true,
+            title: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
         }
     });
     return result;
@@ -96,4 +167,5 @@ export const mealService = {
     getMealByIdFromDB,
     createMealIntoDB,
     updateMealByIdInDB,
+    deleteMealByIdInDB,
 }

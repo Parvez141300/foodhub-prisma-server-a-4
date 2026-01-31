@@ -43,6 +43,23 @@ const getAllOrSearchMealFromDB = async ({ search }: { search: string | undefined
     return result;
 }
 
+const getMealByIdFromDB = async (mealId: string) => {
+    const result = await prisma.meal.findUnique({
+        where: {
+            id: mealId
+        },
+        include: {
+            category: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    });
+
+    return result;
+}
+
 const createMealIntoDB = async (payload: Meal) => {
     console.log(payload);
     const result = await prisma.meal.create({
@@ -53,5 +70,6 @@ const createMealIntoDB = async (payload: Meal) => {
 
 export const mealService = {
     getAllOrSearchMealFromDB,
+    getMealByIdFromDB,
     createMealIntoDB,
 }

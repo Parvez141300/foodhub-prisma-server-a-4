@@ -86,12 +86,15 @@ const getMealByIdFromDB = async (mealId: string) => {
 const createMealIntoDB = async (payload: Meal) => {
     console.log(payload);
     const result = await prisma.meal.create({
-        data: payload,
+        data: {
+            ...payload,
+            price: Number(payload?.price),
+        },
     });
     return result;
 }
 
-const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload: Record<string, string> }) => {
+const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload: Meal}) => {
     const mealData = await prisma.meal.findUnique({
         where: {
             id: mealId
@@ -122,7 +125,8 @@ const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload
             id: mealId
         },
         data: {
-            ...payload
+            ...payload,
+            price: Number(payload?.price),
         },
         select: {
             id: true,

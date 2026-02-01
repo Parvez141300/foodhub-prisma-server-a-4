@@ -73,7 +73,7 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
     payload.orderItems.forEach(item => {
         const meal = meals.find(m => m.id === item.meal_id);
         if (meal?.id) {
-            total_price = total_price + (meal.price * item.quantity);
+            total_price = total_price + (Number(meal.price) * Number(item.quantity));
         }
     });
 
@@ -91,7 +91,7 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
             {
                 order_id: order?.id,
                 meal_id: item?.meal_id,
-                quantity: item?.quantity,
+                quantity: Number(item?.quantity),
             }
         ));
         // create order items

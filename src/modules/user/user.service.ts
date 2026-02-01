@@ -10,6 +10,18 @@ const getAllProviderFromDB = async () => {
     return result;
 }
 
+const getProviderWithMenuFromDB = async (providerId: string) => {
+    const result = await prisma.user.findUnique({
+        where: {
+            id: providerId,
+        },
+        include: {
+            meals: true,
+        }
+    });
+    return result;
+}
+
 const getAllOrSearchUserFromDB = async (payload: { id?: string, name?: string, email?: string }) => {
     const result = await prisma.user.findMany({
         where: {
@@ -53,7 +65,7 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
         return { message: "User not found" };
     }
 
-    if(!payload?.is_active) {
+    if (!payload?.is_active) {
         return { message: "user status to update data not found" };
     }
 
@@ -75,6 +87,7 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
 
 export const userService = {
     getAllProviderFromDB,
+    getProviderWithMenuFromDB,
     getAllOrSearchUserFromDB,
     updateUserStatusInDB,
 }

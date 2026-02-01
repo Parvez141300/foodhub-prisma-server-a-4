@@ -18,8 +18,8 @@ const getUserOrdersFromDB = async (user_id: string) => {
             id: true,
         }
     });
-    if(userData?.id !== user_id){
-        return {message: "this user is not valid"}
+    if (userData?.id !== user_id) {
+        return { message: "this user is not valid" }
     };
 
     const result = await prisma.order.findMany({
@@ -31,6 +31,19 @@ const getUserOrdersFromDB = async (user_id: string) => {
         }
     });
 
+    return result;
+}
+
+const getOrderDetailsFromDB = async (order_id: string) => {
+    const result = await prisma.order.findUnique({
+        where: {
+            id: order_id
+        },
+        include: {
+            orderItems: true,
+            user: true,
+        }
+    });
     return result;
 }
 
@@ -93,5 +106,6 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
 
 export const orderService = {
     getUserOrdersFromDB,
+    getOrderDetailsFromDB,
     createOrderInDB,
 };

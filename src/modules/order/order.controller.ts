@@ -11,6 +11,16 @@ const getUserOrders: RequestHandler = async (req, res) => {
     }
 }
 
+const getOrderDetails: RequestHandler = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const result = await orderService.getOrderDetailsFromDB(orderId as string);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 const createOrder: RequestHandler = async (req, res) => {
     try {
         const orderData = req.body;
@@ -23,5 +33,6 @@ const createOrder: RequestHandler = async (req, res) => {
 
 export const orderController = {
     getUserOrders,
+    getOrderDetails,
     createOrder,
 };

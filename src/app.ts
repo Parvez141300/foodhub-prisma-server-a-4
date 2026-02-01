@@ -12,7 +12,10 @@ export const app = express();
 app.all("/api/auth/*splat", toNodeHandler(auth));
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.APP_URL || "http://localhost:3000",
+  credentials: true,
+}));
 
 app.use("/api", mealRouter);
 app.use("/api", categoryRouter);

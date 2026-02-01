@@ -1,6 +1,16 @@
 import { prisma } from "../../lib/prisma";
 import { Review } from "../../../generated/prisma/client";
 
+const getAllReviewByMealIdFromDB = async (meal_id: string) => {
+    const result = await prisma.review.findMany({
+        where: {
+            meal_id: meal_id,
+        }
+    });
+
+    return result;
+}
+
 const createReviewInDB = async (payload: Review) => {
     const userData = await prisma.user.findUnique({
         where: { id: payload.author_id },
@@ -25,5 +35,6 @@ const createReviewInDB = async (payload: Review) => {
 }
 
 export const reviewService = {
+    getAllReviewByMealIdFromDB,
     createReviewInDB,
 };

@@ -16,7 +16,8 @@ const createReviewInDB = async (payload: Review) => {
     }
     const result = await prisma.review.create({
         data: {
-            ...payload
+            ...payload,
+            rating: Number(payload.rating),
         }
     })
 

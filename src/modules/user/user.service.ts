@@ -1,5 +1,15 @@
 import { prisma } from "../../lib/prisma"
 
+
+const getAllProviderFromDB = async () => {
+    const result = await prisma.user.findMany({
+        where: {
+            role: "PROVIDER",
+        }
+    });
+    return result;
+}
+
 const getAllOrSearchUserFromDB = async (payload: { id?: string, name?: string, email?: string }) => {
     const result = await prisma.user.findMany({
         where: {
@@ -64,6 +74,7 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
 }
 
 export const userService = {
+    getAllProviderFromDB,
     getAllOrSearchUserFromDB,
     updateUserStatusInDB,
 }

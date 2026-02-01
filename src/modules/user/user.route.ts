@@ -3,6 +3,7 @@ import { userController } from "./user.controller";
 
 const router = Router();
 
+router.get("/providers", userController.getAllProvider);
 router.get("/admin/users", userController.getAllOrSearchUser);
 router.patch("/admin/users/:userId", userController.updateUserStatus);
 

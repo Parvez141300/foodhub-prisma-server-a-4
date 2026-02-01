@@ -31,8 +31,20 @@ const createOrder: RequestHandler = async (req, res) => {
     }
 }
 
+const updateOrderStatus: RequestHandler = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { provider_id, order_status } = req.body;
+        const result = await orderService.updateOrderStatusInDB({ order_id: orderId as string, provider_id, order_status });
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 export const orderController = {
     getUserOrders,
     getOrderDetails,
     createOrder,
+    updateOrderStatus,
 };

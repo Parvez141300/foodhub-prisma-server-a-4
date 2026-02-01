@@ -1,4 +1,5 @@
 
+import { Order_Status } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 type CreateOrderPayloadType = {
@@ -104,8 +105,32 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
     return result;
 }
 
+const updateOrderStatusInDB = async ({order_id, provider_id, order_status}: {order_id: string, provider_id: string, order_status: Order_Status}) => {
+    const userData = await prisma.user.findUnique({
+        where: {
+            id: provider_id,
+        }
+    });
+
+    if (userData?.role !== "PROVIDER" && !userData?.id) {
+        return { message: "provider/creator is not valid to update order status" };
+    }
+
+    const result = await prisma.order.update({
+        where: {
+            id: order_id,
+        },
+        data: {
+            order_status: order_status,
+        }
+    });
+
+    return result;
+}
+
 export const orderService = {
     getUserOrdersFromDB,
     getOrderDetailsFromDB,
     createOrderInDB,
+    updateOrderStatusInDB,
 };

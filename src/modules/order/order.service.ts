@@ -9,6 +9,31 @@ type CreateOrderPayloadType = {
     }[]
 }
 
+const getUserOrdersFromDB = async (user_id: string) => {
+    const userData = await prisma.user.findUnique({
+        where: {
+            id: user_id
+        },
+        select: {
+            id: true,
+        }
+    });
+    if(userData?.id !== user_id){
+        return {message: "this user is not valid"}
+    };
+
+    const result = await prisma.order.findMany({
+        where: {
+            user_id: user_id,
+        },
+        include: {
+            orderItems: true,
+        }
+    });
+
+    return result;
+}
+
 const createOrderInDB = async (payload: CreateOrderPayloadType) => {
     // find user
     const userData = await prisma.user.findUnique({
@@ -67,5 +92,6 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
 }
 
 export const orderService = {
+    getUserOrdersFromDB,
     createOrderInDB,
 };

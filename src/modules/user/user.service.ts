@@ -85,9 +85,31 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
     return result;
 }
 
+const updateUserRoleInDB = async ({userId, role}: {userId: string, role: string}) => {
+    const userData = await prisma.user.findUnique({
+        where: {
+            id: userId
+        }
+    });
+    if(!userData?.id){
+        return {message: "This user not found!!!!"};
+    }
+    const result = await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            role: role
+        }
+    });
+
+    return result;
+}
+
 export const userService = {
     getAllProviderFromDB,
     getProviderWithMenuFromDB,
     getAllOrSearchUserFromDB,
     updateUserStatusInDB,
+    updateUserRoleInDB,
 }

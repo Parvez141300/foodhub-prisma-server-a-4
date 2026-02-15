@@ -30,7 +30,6 @@ const getAllOrSearchUser: RequestHandler = async (req, res) => {
     }
 }
 
-
 const updateUserStatus: RequestHandler = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -42,9 +41,20 @@ const updateUserStatus: RequestHandler = async (req, res) => {
     }
 }
 
+const updateUserRole: RequestHandler = async (req, res) => {
+    try {
+        const { userId, role } = req.body;
+        const result = await userService.updateUserRoleInDB({ userId, role });
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
 export const userController = {
     getAllProvider,
     getProviderWithMenu,
     getAllOrSearchUser,
     updateUserStatus,
+    updateUserRole,
 }

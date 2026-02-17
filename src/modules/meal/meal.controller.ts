@@ -12,7 +12,7 @@ const getAllOrSearchMeal: RequestHandler = async (req, res) => {
         const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
 
         const result = await mealService.getAllOrSearchMealFromDB({ search: searchString, page, limit, skip, sort_by, sort_order });
-        res.status(201).json(result);
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }

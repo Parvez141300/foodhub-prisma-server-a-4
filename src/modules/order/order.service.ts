@@ -4,6 +4,16 @@ import { prisma } from "../../lib/prisma";
 
 type CreateOrderPayloadType = {
     user_id: string;
+
+    name: string;
+    phone: string;
+    division: string;
+    district: string;
+    thana: string;
+    area: string;
+    street?: string;
+    postal_code?: string;
+
     orderItems: {
         meal_id: string,
         quantity: number
@@ -59,6 +69,8 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
         return { message: "User not found to create order" };
     }
 
+    
+
     // find meals data
     const meals = await prisma.meal.findMany({
         where: {
@@ -83,6 +95,14 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
         const order = await tx.order.create({
             data: {
                 user_id: payload.user_id,
+                name: payload.name,
+                phone: payload.phone,
+                division: payload.division,
+                district: payload.district,
+                thana: payload.thana,
+                area: payload.area,
+                street: payload.street || "",
+                postal_code: payload.postal_code || "",
                 total_price: total_price,
             }
         });
@@ -105,7 +125,7 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
     return result;
 }
 
-const updateOrderStatusInDB = async ({order_id, provider_id, order_status}: {order_id: string, provider_id: string, order_status: Order_Status}) => {
+const updateOrderStatusInDB = async ({ order_id, provider_id, order_status }: { order_id: string, provider_id: string, order_status: Order_Status }) => {
     const userData = await prisma.user.findUnique({
         where: {
             id: provider_id,

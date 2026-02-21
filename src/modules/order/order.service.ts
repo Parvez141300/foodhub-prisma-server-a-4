@@ -14,10 +14,14 @@ type CreateOrderPayloadType = {
     street?: string;
     postal_code?: string;
 
-    orderItems: {
+    orderItems?: {
         meal_id: string,
-        quantity: number
-    }[]
+        quantity: number,
+    },
+    cartItems?: {
+        meal_id: string,
+        quantity: number,
+    }[],
 }
 
 const getUserOrdersFromDB = async (user_id: string) => {
@@ -69,25 +73,39 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
         return { message: "User not found to create order" };
     }
 
-    
-
-    // find meals data
-    const meals = await prisma.meal.findMany({
-        where: {
-            id: {
-                in: payload.orderItems.map(item => item.meal_id),
-            }
-        }
-    });
-
-    // total price calculation by quantity
+    let meal: any = {};
     let total_price = 0;
-    payload.orderItems.forEach(item => {
-        const meal = meals.find(m => m.id === item.meal_id);
-        if (meal?.id) {
-            total_price = total_price + (Number(meal.price) * Number(item.quantity));
-        }
-    });
+
+    if (payload?.orderItems?.meal_id) {
+        meal = await prisma.meal.findUnique({
+            where: {
+                id: payload.orderItems.meal_id,
+            }
+        });
+        total_price = Number(meal?.price) * Number(payload.orderItems.quantity);
+    }
+
+    let meals: any = [];
+
+    if (payload?.cartItems?.length) {
+        // find meals data
+        meals = await prisma.meal.findMany({
+            where: {
+                id: {
+                    in: payload.cartItems.map(item => item.meal_id),
+                }
+            }
+        });
+        // total price calculation by quantity
+
+        payload.cartItems.forEach(item => {
+            const meal = meals.find((m: any) => m.id === item.meal_id);
+            if (meal?.id) {
+                total_price = total_price + (Number(meal.price) * Number(item.quantity));
+            }
+        });
+    }
+
 
     // create order and orderItems by transaction
     const result = prisma.$transaction(async (tx) => {
@@ -106,18 +124,33 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
                 total_price: total_price,
             }
         });
-        // order items array
-        const orderItemData = payload.orderItems.map(item => (
-            {
+        if (payload?.orderItems?.meal_id) {
+            // create order item
+            const orderItemData = {
                 order_id: order?.id,
-                meal_id: item?.meal_id,
-                quantity: Number(item?.quantity),
+                meal_id: meal?.id,
+                quantity: Number(payload?.orderItems.quantity),
             }
-        ));
-        // create order items
-        await tx.orderItem.createMany({
-            data: orderItemData,
-        });
+            // create order items
+            await tx.orderItem.create({
+                data: orderItemData
+            });
+        }
+        if (payload?.cartItems?.length) {
+            // order items array
+            const cartItemData = payload.cartItems.map(item => (
+                {
+                    order_id: order?.id,
+                    meal_id: item?.meal_id,
+                    quantity: Number(item?.quantity),
+                }
+            ));
+            // create order items
+            await tx.orderItem.createMany({
+                data: cartItemData,
+            });
+        }
+
 
         return order;
     });

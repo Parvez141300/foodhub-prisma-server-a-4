@@ -19,6 +19,7 @@ model Meal {
   category_id  String
   title        String   @db.VarChar(250)
   description  String   @db.Text
+  stock        Int
   price        Int
   image_url    String
   is_available Boolean  @default(true)

@@ -31,6 +31,7 @@ model Meal {
   orderItems    OrderItem[]
   reviews       Review[]
   wishlistItems WishlistItem[]
+  cartItems     CartItem[]
 }
 
 model Category {
@@ -62,6 +63,28 @@ model Dietery {
   updated_at DateTime @updatedAt
 
   creator User @relation(fields: [creator_id], references: [id])
+}
+
+model Cart {
+  id      String @id @default(uuid())
+  user_id String @unique
+  meal_id String
+
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  cartItems  CartItem[]
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  cart_id  String
+  meal_id  String
+  quantity Int
+
+  cart Cart @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  meal Meal @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+
+  @@unique([cart_id, meal_id])
 }
 
 enum Order_Status {

@@ -14,9 +14,12 @@ datasource db {
 }
 
 model Meal {
-  id           String   @id @default(uuid())
-  provider_id  String
-  category_id  String
+  id          String @id @default(uuid())
+  provider_id String
+  category_id String
+  cuisine_id  String
+  dietery_id  String
+
   title        String   @db.VarChar(250)
   description  String   @db.Text
   stock        Int
@@ -27,8 +30,11 @@ model Meal {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  provider      User           @relation(fields: [provider_id], references: [id], onDelete: Cascade)
-  category      Category       @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  provider User     @relation(fields: [provider_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  cuisine  Cuisine  @relation(fields: [cuisine_id], references: [id], onDelete: Cascade)
+  dietery  Dietery  @relation(fields: [dietery_id], references: [id], onDelete: Cascade)
+
   orderItems    OrderItem[]
   reviews       Review[]
   wishlistItems WishlistItem[]
@@ -53,7 +59,8 @@ model Cuisine {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  creator User @relation(fields: [creator_id], references: [id])
+  creator User   @relation(fields: [creator_id], references: [id])
+  meals   Meal[]
 }
 
 model Dietery {
@@ -63,7 +70,8 @@ model Dietery {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  creator User @relation(fields: [creator_id], references: [id])
+  creator User   @relation(fields: [creator_id], references: [id])
+  meals   Meal[]
 }
 
 model Cart {

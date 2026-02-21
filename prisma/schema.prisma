@@ -43,6 +43,26 @@ model Category {
   meals   Meal[]
 }
 
+model Cuisine {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  creator_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  creator User @relation(fields: [creator_id], references: [id])
+}
+
+model Dietery {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  creator_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  creator User @relation(fields: [creator_id], references: [id])
+}
+
 enum Order_Status {
   PENDING
   PROCESSING
@@ -83,13 +103,19 @@ model Review {
 }
 
 model Profile {
-  id          String   @id @default(uuid())
-  user_id     String   @unique
-  description String   @db.Text
-  address     String
-  phone       String   @db.VarChar(20)
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id      String @id @default(uuid())
+  user_id String @unique
+
+  phone       String
+  division    String
+  district    String
+  thana       String
+  area        String
+  street      String?
+  postal_code String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
@@ -112,6 +138,8 @@ model User {
   reviews       Review[]
   meals         Meal[]
   categories    Category[]
+  cuisines      Cuisine[]
+  dieteries     Dietery[]
 
   @@unique([email])
   @@map("user")

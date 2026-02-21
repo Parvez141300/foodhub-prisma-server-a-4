@@ -135,6 +135,17 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
             await tx.orderItem.create({
                 data: orderItemData
             });
+            // update meal stock to decrease
+            await tx.meal.update({
+                where: {
+                    id: meal?.id,
+                },
+                data: {
+                    stock: {
+                        decrement: payload?.orderItems?.quantity,
+                    },
+                }
+            });
         }
         if (payload?.cartItems?.length) {
             // order items array
@@ -149,6 +160,19 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
             await tx.orderItem.createMany({
                 data: cartItemData,
             });
+            // update meals stock to decrease
+            for (const item of payload.cartItems) {
+                await tx.meal.update({
+                    where: {
+                        id: item.meal_id
+                    },
+                    data: {
+                        stock: {
+                            decrement: item.quantity,
+                        }
+                    }
+                })
+            }
         }
 
 

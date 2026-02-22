@@ -72,11 +72,9 @@ const getMealByIdFromDB = async (mealId: string) => {
             id: mealId
         },
         include: {
-            category: {
-                select: {
-                    name: true
-                }
-            }
+            category: true,
+            cuisine: true,
+            dietery: true,
         }
     });
 

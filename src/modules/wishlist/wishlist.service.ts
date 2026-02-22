@@ -53,7 +53,7 @@ const createWishListInDB = async (user_id: string, meal_id: string) => {
     }
 }
 
-const deleteWishListItemFromDB = async (wishListId: string, user_id: string, meal_id: string) => {
+const deleteWishListItemFromDB = async ({ wishListId, user_id, meal_id }: { wishListId: string, user_id: string, meal_id: string }) => {
     const isExistsWishList = await prisma.wishlist.findUnique({
         where: {
             id: wishListId,

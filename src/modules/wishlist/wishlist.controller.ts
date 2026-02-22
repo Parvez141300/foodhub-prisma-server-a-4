@@ -15,7 +15,7 @@ const deleteWishListItem: RequestHandler = async (req, res) => {
     try {
         const { wishListId } = req.params;
         const { user_id, meal_id } = req.body;
-        const result = await wishListService.deleteWishListItemFromDB(wishListId, user_id, meal_id);
+        const result = await wishListService.deleteWishListItemFromDB({ wishListId: wishListId as string, user_id, meal_id });
         res.status(201).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal Server Error" });

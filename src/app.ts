@@ -10,6 +10,7 @@ import { reviewRouter } from "./modules/review/review.route";
 import { profileRouter } from "./modules/profile/profile.route";
 import { cuisineRouter } from "./modules/cuisine/cuisine.route";
 import { dieteryRouter } from "./modules/dietery/dietery.route";
+import { cartRouter } from "./modules/cart/cart.route";
 
 export const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api", profileRouter);
 app.use("/api/admin", categoryRouter);
 app.use("/api/admin", cuisineRouter);
 app.use("/api/admin", dieteryRouter);
+app.use("/api", cartRouter);
 
 app.get('/', (req, res) => {
   res.send('FoodHub server is running');

@@ -24,13 +24,13 @@ app.use(express.json());
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use("/api", mealRouter);
-app.use("/api", categoryRouter);
 app.use("/api", userRouter);
 app.use("/api", orderRouter);
 app.use("/api", reviewRouter);
 app.use("/api", profileRouter);
-app.use("/api", cuisineRouter);
-app.use("/api", dieteryRouter);
+app.use("/api/admin", categoryRouter);
+app.use("/api/admin", cuisineRouter);
+app.use("/api/admin", dieteryRouter);
 
 app.get('/', (req, res) => {
   res.send('FoodHub server is running');

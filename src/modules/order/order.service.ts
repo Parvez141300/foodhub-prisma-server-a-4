@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 
 type CreateOrderPayloadType = {
     user_id: string;
+    cart_id?: string;
 
     name: string;
     phone: string;
@@ -125,6 +126,21 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
             }
         });
         if (payload?.orderItems?.meal_id) {
+            // create order
+            const order = await tx.order.create({
+                data: {
+                    user_id: payload.user_id,
+                    name: payload.name,
+                    phone: payload.phone,
+                    division: payload.division,
+                    district: payload.district,
+                    thana: payload.thana,
+                    area: payload.area,
+                    street: payload.street || "",
+                    postal_code: payload.postal_code || "",
+                    total_price: total_price,
+                }
+            });
             // create order item
             const orderItemData = {
                 order_id: order?.id,
@@ -148,6 +164,22 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
             });
         }
         if (payload?.cartItems?.length) {
+            // create order
+            const order = await tx.order.create({
+                data: {
+                    user_id: payload.user_id,
+                    cart_id: payload.cart_id || null,
+                    name: payload.name,
+                    phone: payload.phone,
+                    division: payload.division,
+                    district: payload.district,
+                    thana: payload.thana,
+                    area: payload.area,
+                    street: payload.street || "",
+                    postal_code: payload.postal_code || "",
+                    total_price: total_price,
+                }
+            });
             // order items array
             const cartItemData = payload.cartItems.map(item => (
                 {

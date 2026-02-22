@@ -8,6 +8,7 @@ import { userRouter } from "./modules/user/user.route";
 import { orderRouter } from "./modules/order/order.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { profileRouter } from "./modules/profile/profile.route";
+import { cuisineRouter } from "./modules/cuisine/cuisine.route";
 
 export const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api", userRouter);
 app.use("/api", orderRouter);
 app.use("/api", reviewRouter);
 app.use("/api", profileRouter);
+app.use("/api", cuisineRouter);
 
 app.get('/', (req, res) => {
   res.send('FoodHub server is running');

@@ -2,7 +2,7 @@ import { Category } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma"
 
 const createCategoryIntoDB = async (payload: Category) => {
-    console.log(payload);
+    
     const categoryData = await prisma.category.findUnique({
         where: {
             name: payload.name,

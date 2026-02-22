@@ -34,8 +34,9 @@ const createMeal: RequestHandler = async (req, res) => {
         const payload = req.body;
         const result = await mealService.createMealIntoDB(payload);
         res.status(201).json(result);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
 

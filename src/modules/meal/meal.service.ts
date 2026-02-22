@@ -84,10 +84,11 @@ const getMealByIdFromDB = async (mealId: string) => {
 }
 
 const createMealIntoDB = async (payload: Meal) => {
-    console.log(payload);
+    // console.log(payload);
     const result = await prisma.meal.create({
         data: {
             ...payload,
+            stock: Number(payload?.stock),
             price: Number(payload?.price),
         },
     });

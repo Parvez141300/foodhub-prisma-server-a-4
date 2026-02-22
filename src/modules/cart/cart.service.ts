@@ -1,56 +1,125 @@
-import { Cart } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma";
 
-const createCartInDB = async (payload: Cart) => {
-    const isExistingUser = await prisma.user.findUnique({
-        where: {
-            id: payload.user_id,
-        },
-    });
-    if (!isExistingUser) {
-        return { message: "User not found" };
-    }
-    const isExistingCart = await prisma.cart.findUnique({
-        where: {
-            id: payload.id,
-        },
-    });
-    if (isExistingCart) {
-        return { message: "Cart already exists" };
-    }
-    const result = await prisma.cart.create({
-        data: payload,
-    });
-    return result;
-}
+const createCartInDB = async (payload: {
+    user_id: string;
+    meal_id: string;
+    quantity: string;
+}) => {
+    const { user_id, meal_id, quantity } = payload;
 
-const deleteCartFromDB = async ({ cartId, user_id }: { cartId: string, user_id: string }) => {
     const isExistingUser = await prisma.user.findUnique({
         where: {
             id: user_id,
         },
     });
     if (!isExistingUser) {
-        return { message: "User not found" };
+        throw new Error("User not found");
+        return;
     }
+
+    const isExistMeal = await prisma.meal.findUnique({
+        where: {
+            id: meal_id,
+        },
+    });
+    if (!isExistMeal) {
+        throw new Error("Meal not found");
+        return;
+    }
+
+    let cart = await prisma.cart.findUnique({
+        where: {
+            user_id: user_id,
+        },
+    });
+    if (!cart) {
+        cart = await prisma.cart.create({
+            data: {
+                user_id: user_id,
+            },
+        })
+    }
+
+    let cartItem = await prisma.cartItem.findUnique({
+        where: {
+            cart_id_meal_id: {
+                cart_id: cart.id,
+                meal_id: meal_id,
+            }
+        }
+    });
+    if (cartItem) {
+        const result = await prisma.cartItem.update({
+            where: {
+                cart_id_meal_id: {
+                    cart_id: cart.id,
+                    meal_id: meal_id,
+                }
+            },
+            data: {
+                quantity: Number(cartItem.quantity) + Number(quantity),
+            }
+        });
+
+        return result;
+    }
+    else {
+        const result = await prisma.cartItem.create({
+            data: {
+                cart_id: cart.id,
+                meal_id: meal_id,
+                quantity: Number(quantity),
+            }
+        });
+
+        return result;
+    }
+}
+
+const deleteCartItemFromDB = async ({ cartId, user_id, meal_id }: { cartId: string, user_id: string, meal_id: string }) => {
+    const isExistingUser = await prisma.user.findUnique({
+        where: {
+            id: user_id,
+        },
+    });
+    if (!isExistingUser) {
+        throw new Error("User not found")
+        return;
+    }
+
     const isExistingCart = await prisma.cart.findUnique({
         where: {
             id: cartId,
         },
     });
     if (!isExistingCart) {
-        return { message: "Cart not found" };
+        throw new Error("Cart not found")
+        return;
     }
-    const result = await prisma.cart.delete({
+
+    const isExistMeal = await prisma.meal.findUnique({
         where: {
-            id: cartId
+            id: meal_id,
+        }
+    });
+    if(!isExistMeal){
+        throw new Error("Meal not found");
+        return;
+    }
+
+    const deleteCartItem = await prisma.cartItem.delete({
+        where: {
+            cart_id_meal_id: {
+                cart_id: cartId,
+                meal_id: meal_id,
+            }
         }
     });
 
-    return result;
+    return deleteCartItem;
 }
 
 export const cartService = {
     createCartInDB,
-    deleteCartFromDB,
+    deleteCartItemFromDB,
 }

@@ -11,12 +11,12 @@ const createCart: RequestHandler = async (req, res) => {
     }
 }
 
-const deleteCart: RequestHandler = async (req, res) => {
+const deleteCartItem: RequestHandler = async (req, res) => {
     try {
         const { cartId } = req.params;
-        const { user_id } = req.body;
+        const { user_id, meal_id } = req.body;
 
-        const result = await cartService.deleteCartFromDB({ cartId: cartId as string, user_id });
+        const result = await cartService.deleteCartItemFromDB({ cartId: cartId as string, user_id, meal_id });
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal Server Error" });
@@ -25,5 +25,5 @@ const deleteCart: RequestHandler = async (req, res) => {
 
 export const cartController = {
     createCart,
-    deleteCart,
+    deleteCartItem,
 }

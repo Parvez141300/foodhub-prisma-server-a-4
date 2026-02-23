@@ -1,6 +1,11 @@
 import { Dietery } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
+const getAllDieteryFromDB = async () => {
+    const result = await prisma.dietery.findMany();
+    return result;
+}
+
 const createDieteryInDB = async (dietery: Dietery) => {
     const isExisting = await prisma.dietery.findUnique({
         where: {
@@ -36,6 +41,7 @@ const deleteDieteryFromDB = async (dietery_id: string) => {
 }
 
 export const dieteryService = {
+    getAllDieteryFromDB,
     createDieteryInDB,
     deleteDieteryFromDB,
 }

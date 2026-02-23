@@ -1,6 +1,15 @@
 import { RequestHandler } from "express";
 import { dieteryService } from "./dietery.service";
 
+const getAllDietery: RequestHandler = async (req, res) => {
+    try {
+        const result = await dieteryService.getAllDieteryFromDB();
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+}
+
 const createDietery: RequestHandler = async (req, res) => {
     try {
         const payload = req.body;
@@ -23,6 +32,7 @@ const deleteDietery: RequestHandler = async (req, res) => {
 }
 
 export const dieteryController = {
+    getAllDietery,
     createDietery,
     deleteDietery,
 }

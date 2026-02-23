@@ -1,6 +1,7 @@
 import { Profile } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
+
 const updateOrInsertProfileInDB = async (paylaod: Profile) => {
     const {id, created_at, updated_at, user_id, ...rest_data} = paylaod;
 

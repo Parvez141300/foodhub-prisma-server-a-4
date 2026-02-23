@@ -17,6 +17,26 @@ const createCategoryIntoDB = async (payload: Category) => {
     return result;
 }
 
+const deleteCategoryFromDb = async (category_id: string) => {
+    const isExistCategory = await prisma.category.findUnique({
+        where: {
+            id: category_id,
+        }
+    });
+    if(!isExistCategory){
+        throw new Error("This category does not exists");
+        return;
+    }
+    const result = await prisma.category.delete({
+        where: {
+            id: category_id,
+        }
+    });
+
+    return result;
+}
+
 export const categoryService = {
     createCategoryIntoDB,
+    deleteCategoryFromDb,
 }

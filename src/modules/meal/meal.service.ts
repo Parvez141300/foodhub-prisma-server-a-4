@@ -82,6 +82,7 @@ const getAllOrQueryMealFromDB = async (
             [sort_by]: safeSortOrder,
         },
         include: {
+            provider: true,
             category: {
                 select: {
                     id: true,

@@ -16,6 +16,28 @@ const createCuisineInDB = async (cuisineData: Cuisine) => {
     return result;
 }
 
+const deleteCuisineFromDB = async (cuisine_id: string) => {
+    const isExistCuisine = await prisma.cuisine.findUnique({
+        where: {
+            id: cuisine_id
+        }
+    });
+
+    if(!isExistCuisine){
+        throw new Error("This cuisine does not exists");
+        return;
+    }
+
+    const result = await prisma.cuisine.delete({
+        where: {
+            id: cuisine_id,
+        }
+    });
+
+    return result;
+}
+
 export const cuisineService = {
     createCuisineInDB,
+    deleteCuisineFromDB,
 }

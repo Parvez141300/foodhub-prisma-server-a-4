@@ -5,13 +5,18 @@ import { paginationAndSortingHelper } from "../../helpers/paginationAndSortingHe
 
 const getAllOrSearchMeal: RequestHandler = async (req, res) => {
     try {
-        const { search } = req.query;
+        const { search, category, cuisine, dietery, minPrice, maxPrice } = req.query;
 
         const searchString = typeof search === "string" ? search : undefined;
+        const categoryString = typeof category === "string" ? category : undefined;
+        const cuisineString = typeof cuisine === "string" ? cuisine : undefined;
+        const dieteryString = typeof dietery === "string" ? dietery : undefined;
+        const minP = minPrice ? Number(minPrice) : undefined;
+        const maxP = maxPrice ? Number(maxPrice) : undefined;
 
         const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
 
-        const result = await mealService.getAllOrSearchMealFromDB({ search: searchString, page, limit, skip, sort_by, sort_order });
+        const result = await mealService.getAllOrSearchMealFromDB({ search: searchString, category: categoryString, cuisine: cuisineString, dietery: dieteryString, minPrice: minP, maxPrice: maxP, page, limit, skip, sort_by, sort_order });
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

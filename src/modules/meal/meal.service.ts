@@ -2,8 +2,17 @@ import { Meal } from "../../../generated/prisma/client"
 import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
-const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, sort_order }: { search: string | undefined, page: number, limit: number, skip: number, sort_by: string, sort_order: string }) => {
+const getAllOrSearchMealFromDB = async (
+    {
+        search, category, cuisine, dietery, minPrice, maxPrice, page, limit, skip, sort_by, sort_order
+    }
+        :
+        {
+            search: string | undefined, category: string, cuisine: string, dietery: string, minPrice: number, maxPrice: number, page: number, limit: number, skip: number, sort_by: string, sort_order: string
+        }
+) => {
     const addCondition: MealWhereInput[] = [];
+
     if (search) {
         addCondition.push({
             OR: [
@@ -30,12 +39,44 @@ const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, so
             ]
         });
     }
+    if (category) {
+        addCondition.push({
+            category_id: {
+                in: category.split(","),
+            }
+        })
+    }
+    if (cuisine) {
+        addCondition.push({
+            cuisine_id: {
+                in: cuisine.split(","),
+            }
+        })
+    }
+    if (dietery) {
+        addCondition.push({
+            dietery_id: {
+                in: cuisine.split(","),
+            }
+        })
+    }
+
+    if (minPrice || maxPrice) {
+        addCondition.push({
+            price: {
+                gte: minPrice || 0,
+                lte: maxPrice || 10000,
+            }
+        })
+    }
+
     const safeSortOrder = sort_order.toLowerCase() === 'desc' ? 'desc' : 'asc';
     const result = await prisma.meal.findMany({
         skip: skip,
         take: limit,
         where: {
-            AND: addCondition
+            AND: addCondition,
+            is_available: true,
         },
         orderBy: {
             [sort_by]: safeSortOrder,
@@ -43,15 +84,28 @@ const getAllOrSearchMealFromDB = async ({ search, page, limit, skip, sort_by, so
         include: {
             category: {
                 select: {
+                    id: true,
                     name: true
                 }
-            }
+            },
+            cuisine: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            dietery: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
         },
     });
 
     const totalItems = await prisma.meal.count({
         where: {
-            AND: addCondition
+            AND: addCondition,
         }
     });
 
@@ -93,17 +147,19 @@ const createMealIntoDB = async (payload: Meal) => {
     return result;
 }
 
-const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload: {
-    title: string,
-    description: string,
-    image_url: string,
-    price: string,
-    stock: string,
-    is_available: string,
-    category_id: string,
-    cuisine_id: string,
-    dietery_id: string,
-}}) => {
+const updateMealByIdInDB = async ({ mealId, payload }: {
+    mealId: string, payload: {
+        title: string,
+        description: string,
+        image_url: string,
+        price: string,
+        stock: string,
+        is_available: string,
+        category_id: string,
+        cuisine_id: string,
+        dietery_id: string,
+    }
+}) => {
     const mealData = await prisma.meal.findUnique({
         where: {
             id: mealId
@@ -161,9 +217,9 @@ const updateMealByIdInDB = async ({ mealId, payload }: { mealId: string, payload
             stock: Number(payload?.stock),
             price: Number(payload?.price),
             is_available: Boolean(payload?.is_available),
-            category: {connect: { id: payload.category_id }},
-            cuisine: {connect: { id: payload.cuisine_id }},
-            dietery: {connect: { id: payload.dietery_id }},
+            category: { connect: { id: payload.category_id } },
+            cuisine: { connect: { id: payload.cuisine_id } },
+            dietery: { connect: { id: payload.dietery_id } },
         },
     });
 

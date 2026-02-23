@@ -1,6 +1,11 @@
 import { Category } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma"
 
+const getAllCategoryFromDB = async () => {
+    const result = await prisma.category.findMany();
+    return result;
+}
+
 const createCategoryIntoDB = async (payload: Category) => {
     
     const categoryData = await prisma.category.findUnique({
@@ -37,6 +42,7 @@ const deleteCategoryFromDb = async (category_id: string) => {
 }
 
 export const categoryService = {
+    getAllCategoryFromDB,
     createCategoryIntoDB,
     deleteCategoryFromDb,
 }

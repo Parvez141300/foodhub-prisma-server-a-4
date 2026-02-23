@@ -3,7 +3,7 @@ import { RequestHandler } from "express";
 import { mealService } from "./meal.service"
 import { paginationAndSortingHelper } from "../../helpers/paginationAndSortingHelper";
 
-const getAllOrSearchMeal: RequestHandler = async (req, res) => {
+const getAllOrQueryMeal: RequestHandler = async (req, res) => {
     try {
         const { search, category, cuisine, dietery, minPrice, maxPrice } = req.query;
 
@@ -16,7 +16,7 @@ const getAllOrSearchMeal: RequestHandler = async (req, res) => {
 
         const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
 
-        const result = await mealService.getAllOrSearchMealFromDB({ search: searchString, category: categoryString, cuisine: cuisineString, dietery: dieteryString, minPrice: minP, maxPrice: maxP, page, limit, skip, sort_by, sort_order });
+        const result = await mealService.getAllOrQueryMealFromDB({ search: searchString, category: categoryString, cuisine: cuisineString, dietery: dieteryString, minPrice: minP, maxPrice: maxP, page, limit, skip, sort_by, sort_order });
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
@@ -67,7 +67,7 @@ const deleteMealById: RequestHandler = async (req, res) => {
 }
 
 export const mealController = {
-    getAllOrSearchMeal,
+    getAllOrQueryMeal,
     getMealById,
     createMeal,
     updateMealById,

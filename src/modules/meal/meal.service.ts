@@ -2,13 +2,13 @@ import { Meal } from "../../../generated/prisma/client"
 import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
-const getAllOrSearchMealFromDB = async (
+const getAllOrQueryMealFromDB = async (
     {
         search, category, cuisine, dietery, minPrice, maxPrice, page, limit, skip, sort_by, sort_order
     }
         :
         {
-            search: string | undefined, category: string, cuisine: string, dietery: string, minPrice: number, maxPrice: number, page: number, limit: number, skip: number, sort_by: string, sort_order: string
+            search: string | undefined, category: string | undefined, cuisine: string | undefined, dietery: string | undefined, minPrice: number | undefined, maxPrice: number | undefined, page: number, limit: number, skip: number, sort_by: string, sort_order: string
         }
 ) => {
     const addCondition: MealWhereInput[] = [];
@@ -56,7 +56,7 @@ const getAllOrSearchMealFromDB = async (
     if (dietery) {
         addCondition.push({
             dietery_id: {
-                in: cuisine.split(","),
+                in: dietery.split(","),
             }
         })
     }
@@ -274,7 +274,7 @@ const deleteMealByIdInDB = async ({ mealId }: { mealId: string }) => {
 }
 
 export const mealService = {
-    getAllOrSearchMealFromDB,
+    getAllOrQueryMealFromDB,
     getMealByIdFromDB,
     createMealIntoDB,
     updateMealByIdInDB,

@@ -5,7 +5,7 @@ import authMiddleware, { UserRole } from "../../middleware/authMiddleware";
 
 const router = Router();
 
-router.get("/meals", mealController.getAllOrSearchMeal);
+router.get("/meals", mealController.getAllOrQueryMeal);
 router.get("/meals/:mealId", mealController.getMealById);
 router.post("/provider/meals", authMiddleware(UserRole.PROVIDER), mealController.createMeal);
 router.patch("/provider/meals/:mealId", authMiddleware(UserRole.PROVIDER), mealController.updateMealById);

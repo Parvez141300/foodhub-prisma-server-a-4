@@ -11,13 +11,16 @@ const getAllCategoryFromDB = async () => {
                     role: true,
                 }
             }
+        },
+        orderBy: {
+            created_at: "desc"
         }
     });
     return result;
 }
 
 const createCategoryIntoDB = async (payload: Category) => {
-    
+
     const categoryData = await prisma.category.findUnique({
         where: {
             name: payload.name,
@@ -38,7 +41,7 @@ const deleteCategoryFromDb = async (category_id: string) => {
             id: category_id,
         }
     });
-    if(!isExistCategory){
+    if (!isExistCategory) {
         throw new Error("This category does not exists");
         return;
     }

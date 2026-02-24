@@ -2,7 +2,17 @@ import { Category } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma"
 
 const getAllCategoryFromDB = async () => {
-    const result = await prisma.category.findMany();
+    const result = await prisma.category.findMany({
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    name: true,
+                    role: true,
+                }
+            }
+        }
+    });
     return result;
 }
 

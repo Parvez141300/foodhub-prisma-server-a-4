@@ -2,7 +2,20 @@ import { Dietery } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const getAllDieteryFromDB = async () => {
-    const result = await prisma.dietery.findMany();
+    const result = await prisma.dietery.findMany({
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    name: true,
+                    role: true,
+                }
+            }
+        },
+        orderBy: {
+            created_at: "desc"
+        }
+    });
     return result;
 }
 
@@ -27,7 +40,7 @@ const deleteDieteryFromDB = async (dietery_id: string) => {
             id: dietery_id
         }
     });
-    if(!isExistDietery){
+    if (!isExistDietery) {
         throw new Error("This dietery does not exists");
         return;
     }

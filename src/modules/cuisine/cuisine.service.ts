@@ -2,7 +2,20 @@ import { Cuisine } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma";
 
 const getAllCuisineFromDB = async () => {
-    const result = await prisma.cuisine.findMany();
+    const result = await prisma.cuisine.findMany({
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    name: true,
+                    role: true,
+                }
+            }
+        },
+        orderBy: {
+            created_at: "desc"
+        }
+    });
     return result;
 }
 
@@ -28,7 +41,7 @@ const deleteCuisineFromDB = async (cuisine_id: string) => {
         }
     });
 
-    if(!isExistCuisine){
+    if (!isExistCuisine) {
         throw new Error("This cuisine does not exists");
         return;
     }

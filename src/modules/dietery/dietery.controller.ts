@@ -1,38 +1,38 @@
 import { RequestHandler } from "express";
-import { dieteryService } from "./dietery.service";
+import { dietaryService } from "./dietery.service";
 
-const getAllDietery: RequestHandler = async (req, res) => {
+const getAllDietary: RequestHandler = async (req, res) => {
     try {
-        const result = await dieteryService.getAllDieteryFromDB();
+        const result = await dietaryService.getAllDietaryFromDB();
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
 
-const createDietery: RequestHandler = async (req, res) => {
+const createDietary: RequestHandler = async (req, res) => {
     try {
         const payload = req.body;
-        const result = await dieteryService.createDieteryInDB(payload);
+        const result = await dietaryService.createDietaryInDB(payload);
         res.status(201).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
 
-const deleteDietery: RequestHandler = async (req, res) => {
+const deleteDietary: RequestHandler = async (req, res) => {
     try {
-        const { dieteryId } = req.params;
-        const dietery_id = dieteryId as string;
-        const result = await dieteryService.deleteDieteryFromDB(dietery_id);
+        const { dietaryId } = req.params;
+        const dietary_id = dietaryId as string;
+        const result = await dietaryService.deleteDieteryFromDB(dietary_id);
         res.status(201).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
 
-export const dieteryController = {
-    getAllDietery,
-    createDietery,
-    deleteDietery,
+export const dietaryController = {
+    getAllDietary,
+    createDietary,
+    deleteDietary,
 }

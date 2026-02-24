@@ -9,7 +9,7 @@ import { orderRouter } from "./modules/order/order.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { profileRouter } from "./modules/profile/profile.route";
 import { cuisineRouter } from "./modules/cuisine/cuisine.route";
-import { dieteryRouter } from "./modules/dietery/dietery.route";
+import { dietaryRouter } from "./modules/dietery/dietery.route";
 import { cartRouter } from "./modules/cart/cart.route";
 import { wishListRouter } from "./modules/wishlist/wishlist.route";
 
@@ -32,7 +32,7 @@ app.use("/api", reviewRouter);
 app.use("/api", profileRouter);
 app.use("/api/admin", categoryRouter);
 app.use("/api/admin", cuisineRouter);
-app.use("/api/admin", dieteryRouter);
+app.use("/api/admin", dietaryRouter);
 app.use("/api", cartRouter);
 app.use("/api", wishListRouter);
 

@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { dieteryController } from "./dietery.controller";
+import { dietaryController } from "./dietery.controller";
 
 const router = Router();
 
-router.get("/dieteries", dieteryController.getAllDietery);
-router.post("/dieteries", dieteryController.createDietery);
-router.delete("/dieteries/:dieteryId", dieteryController.deleteDietery);
+router.get("/dietaries", dietaryController.getAllDietary);
+router.post("/dietaries", dietaryController.createDietary);
+router.delete("/dietaries/:dietaryId", dietaryController.deleteDietary);
 
-export const dieteryRouter = router;
+export const dietaryRouter = router;

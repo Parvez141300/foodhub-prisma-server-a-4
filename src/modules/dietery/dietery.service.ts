@@ -1,7 +1,7 @@
 import { Dietery } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
-const getAllDieteryFromDB = async () => {
+const getAllDietaryFromDB = async () => {
     const result = await prisma.dietery.findMany({
         include: {
             creator: {
@@ -19,7 +19,7 @@ const getAllDieteryFromDB = async () => {
     return result;
 }
 
-const createDieteryInDB = async (dietery: Dietery) => {
+const createDietaryInDB = async (dietery: Dietery) => {
     const isExisting = await prisma.dietery.findUnique({
         where: {
             name: dietery.name,
@@ -53,8 +53,8 @@ const deleteDieteryFromDB = async (dietery_id: string) => {
     return result;
 }
 
-export const dieteryService = {
-    getAllDieteryFromDB,
-    createDieteryInDB,
+export const dietaryService = {
+    getAllDietaryFromDB,
+    createDietaryInDB,
     deleteDieteryFromDB,
 }

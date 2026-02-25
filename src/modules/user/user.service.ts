@@ -22,29 +22,27 @@ const getProviderWithMenuFromDB = async (providerId: string) => {
     return result;
 }
 
-const getAllOrSearchUserFromDB = async (payload: { id?: string, name?: string, email?: string }) => {
+const getAllOrSearchUserFromDB = async (search: string) => {
     const result = await prisma.user.findMany({
         where: {
             AND: {
                 OR: [
                     {
-                        id: {
-                            equals: payload.id as string
-                        }
-                    },
-                    {
                         name: {
-                            contains: payload.name as string,
+                            contains: search as string,
                             mode: "insensitive",
                         }
                     },
                     {
                         email: {
-                            contains: payload.email as string
+                            contains: search as string
                         }
                     },
                 ]
             }
+        },
+        orderBy: {
+            createdAt: "desc"
         }
     });
 

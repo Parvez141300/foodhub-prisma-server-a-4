@@ -23,7 +23,9 @@ const getProviderWithMenu: RequestHandler = async (req, res) => {
 
 const getAllOrSearchUser: RequestHandler = async (req, res) => {
     try {
-        const result = await userService.getAllOrSearchUserFromDB(req.query);
+        const { search } = req.query;
+        const query = search ? search : '';
+        const result = await userService.getAllOrSearchUserFromDB(query as string);
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });

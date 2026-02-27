@@ -75,6 +75,7 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
             is_active: payload.is_active as string,
         },
         select: {
+            id: true,
             name: true,
             email: true,
             is_active: true,

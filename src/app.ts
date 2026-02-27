@@ -30,6 +30,7 @@ app.use("/api", userRouter);
 app.use("/api", orderRouter);
 app.use("/api", reviewRouter);
 app.use("/api", profileRouter);
+app.use("/api/admin", orderRouter);
 app.use("/api/admin", categoryRouter);
 app.use("/api/admin", cuisineRouter);
 app.use("/api/admin", dietaryRouter);

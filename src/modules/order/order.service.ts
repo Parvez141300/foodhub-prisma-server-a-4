@@ -25,6 +25,15 @@ type CreateOrderPayloadType = {
     }[],
 }
 
+const getAllOrdersFromDB = async () => {
+    const result = await prisma.order.findMany({
+        orderBy: {
+            created_at: "desc"
+        }
+    });
+    return result;
+}
+
 const getUserOrdersFromDB = async (user_id: string) => {
     const userData = await prisma.user.findUnique({
         where: {
@@ -238,6 +247,7 @@ const updateOrderStatusInDB = async ({ order_id, provider_id, order_status }: { 
 }
 
 export const orderService = {
+    getAllOrdersFromDB,
     getUserOrdersFromDB,
     getOrderDetailsFromDB,
     createOrderInDB,

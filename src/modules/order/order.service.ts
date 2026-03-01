@@ -29,9 +29,39 @@ const getAllOrdersFromDB = async () => {
     const result = await prisma.order.findMany({
         orderBy: {
             created_at: "desc"
+        },
+        include: {
+            cart: true,
+            user: true,
+            orderItems: true,
         }
     });
     return result;
+}
+
+const getPoriderOrdersFromDB = async (providerId: string) => {
+    const orders = await prisma.order.findMany({
+        where: {
+            orderItems: {
+                some: {
+                    meal: {
+                        provider_id: providerId
+                    }
+                }
+            }
+        },
+        include: {
+            cart: true,
+            orderItems: {
+                include: {
+                    meal: true,
+                }
+            },
+            user: true,
+        }
+    });
+
+    return orders;
 }
 
 const getUserOrdersFromDB = async (user_id: string) => {
@@ -249,6 +279,7 @@ const updateOrderStatusInDB = async ({ order_id, provider_id, order_status }: { 
 export const orderService = {
     getAllOrdersFromDB,
     getUserOrdersFromDB,
+    getPoriderOrdersFromDB,
     getOrderDetailsFromDB,
     createOrderInDB,
     updateOrderStatusInDB,

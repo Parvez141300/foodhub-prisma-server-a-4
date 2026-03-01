@@ -10,6 +10,16 @@ const getAllOrders: RequestHandler = async (req, res) => {
     }
 }
 
+const getPoriderOrders: RequestHandler = async (req, res) => {
+    try {
+        const { providerId } = req.params;
+        const result = await orderService.getPoriderOrdersFromDB(providerId as string);
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+}
+
 const getUserOrders: RequestHandler = async (req, res) => {
     try {
         const { user_id } = req.query;
@@ -53,6 +63,7 @@ const updateOrderStatus: RequestHandler = async (req, res) => {
 
 export const orderController = {
     getAllOrders,
+    getPoriderOrders,
     getUserOrders,
     getOrderDetails,
     createOrder,

@@ -206,13 +206,6 @@ const updateMealByIdInDB = async ({ mealId, payload }: {
         where: {
             id: mealId
         },
-        select: {
-            id: true,
-            provider_id: true,
-            category_id: true,
-            cuisine_id: true,
-            dietery_id: true,
-        }
     });
     if (!mealData?.id) {
         throw new Error("To update Meal this meal does not exist");
@@ -253,15 +246,15 @@ const updateMealByIdInDB = async ({ mealId, payload }: {
             id: mealId
         },
         data: {
-            title: payload.title,
-            description: payload.description,
-            image_url: payload.image_url,
-            stock: Number(payload?.stock),
-            price: Number(payload?.price),
-            is_available: Boolean(payload?.is_available),
-            category: { connect: { id: payload.category_id } },
-            cuisine: { connect: { id: payload.cuisine_id } },
-            dietery: { connect: { id: payload.dietery_id } },
+            title: payload.title || mealData.title,
+            description: payload.description || mealData.description,
+            image_url: payload.image_url || mealData.image_url,
+            stock: Number(payload?.stock) || Number(mealData.stock),
+            price: Number(payload?.price) || Number(mealData.price),
+            is_available: Boolean(payload?.is_available) || Boolean(mealData.is_available),
+            category: { connect: { id: payload.category_id || mealData.category_id} },
+            cuisine: { connect: { id: payload.cuisine_id || mealData.cuisine_id} },
+            dietery: { connect: { id: payload.dietery_id || mealData.dietery_id} },
         },
     });
 

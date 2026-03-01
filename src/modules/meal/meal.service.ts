@@ -150,7 +150,10 @@ const getMealsByProviderIdFromDB = async (providerId: string) => {
 
     const result = await prisma.meal.findMany({
         where: {
-            provider_id: providerId
+            provider_id: providerId,
+        },
+        orderBy: {
+            created_at: "desc"
         },
         include: {
             category: {

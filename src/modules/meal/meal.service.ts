@@ -136,6 +136,27 @@ const getMealByIdFromDB = async (mealId: string) => {
     return result;
 }
 
+const getMealsByProviderIdFromDB = async (providerId: string) => {
+    const userData = await prisma.user.findUnique({
+        where: {
+            id: providerId
+        }
+    });
+
+    if(!userData?.id){
+        throw new Error("This user does not exists");
+        return;
+    }
+
+    const result = await prisma.meal.findMany({
+        where: {
+            provider_id: providerId
+        }
+    });
+
+    return result;
+}
+
 const createMealIntoDB = async (payload: Meal) => {
     // console.log(payload);
     const result = await prisma.meal.create({
@@ -277,6 +298,7 @@ const deleteMealByIdInDB = async ({ mealId }: { mealId: string }) => {
 export const mealService = {
     getAllOrQueryMealFromDB,
     getMealByIdFromDB,
+    getMealsByProviderIdFromDB,
     createMealIntoDB,
     updateMealByIdInDB,
     deleteMealByIdInDB,

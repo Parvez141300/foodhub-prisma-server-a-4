@@ -34,6 +34,17 @@ const getMealById: RequestHandler = async (req, res) => {
     }
 }
 
+const getMealsByProviderId: RequestHandler = async (req, res) => {
+    try {
+        const { providerId } = req.params;
+        const result = await mealService.getMealsByProviderIdFromDB(providerId as string);
+        res.status(201).json(result);
+    } catch (error: any) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+}
+
 const createMeal: RequestHandler = async (req, res) => {
     try {
         const payload = req.body;
@@ -69,6 +80,7 @@ const deleteMealById: RequestHandler = async (req, res) => {
 export const mealController = {
     getAllOrQueryMeal,
     getMealById,
+    getMealsByProviderId,
     createMeal,
     updateMealById,
     deleteMealById,

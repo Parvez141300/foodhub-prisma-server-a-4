@@ -120,6 +120,16 @@ const getAllOrQueryMealFromDB = async (
     };
 }
 
+const getAllFeaturedMealsFromDB = async () => {
+    const result = await prisma.meal.findMany({
+        where: {
+            is_featured: true,
+        }
+    });
+
+    return result;
+}
+
 const getMealByIdFromDB = async (mealId: string) => {
     const result = await prisma.meal.findUnique({
         where: {
@@ -313,6 +323,7 @@ const deleteMealByIdInDB = async ({ mealId }: { mealId: string }) => {
 
 export const mealService = {
     getAllOrQueryMealFromDB,
+    getAllFeaturedMealsFromDB,
     getMealByIdFromDB,
     getMealsByProviderIdFromDB,
     createMealIntoDB,

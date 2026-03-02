@@ -18,8 +18,17 @@ const getAllOrQueryMeal: RequestHandler = async (req, res) => {
 
         const result = await mealService.getAllOrQueryMealFromDB({ search: searchString, category: categoryString, cuisine: cuisineString, dietery: dieteryString, minPrice: minP, maxPrice: maxP, page, limit, skip, sort_by, sort_order });
         res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        res.status(500).json({ message: error?.message || "Internal server error" });
+    }
+}
+
+const getAllFeaturedMeals: RequestHandler = async (req, res) => {
+    try {
+        const result = await mealService.getAllFeaturedMealsFromDB();
+        res.status(201).json(result);
+    } catch (error: any) {
+        res.status(500).json({ message: error?.message || "Internal server error" });
     }
 }
 
@@ -29,8 +38,8 @@ const getMealById: RequestHandler = async (req, res) => {
 
         const result = await mealService.getMealByIdFromDB(mealId as string);
         res.status(201).json(result);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        res.status(500).json({ message: error?.message || "Internal server error" });
     }
 }
 
@@ -40,7 +49,6 @@ const getMealsByProviderId: RequestHandler = async (req, res) => {
         const result = await mealService.getMealsByProviderIdFromDB(providerId as string);
         res.status(201).json(result);
     } catch (error: any) {
-        console.log(error.message);
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
@@ -62,8 +70,8 @@ const updateMealById: RequestHandler = async (req, res) => {
         const payload = req.body;
         const result = await mealService.updateMealByIdInDB({ mealId: mealId as string, payload });
         res.status(201).json(result);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        res.status(500).json({ message: error?.message || "Internal server error" });
     }
 }
 
@@ -72,13 +80,14 @@ const deleteMealById: RequestHandler = async (req, res) => {
         const { mealId } = req.params;
         const result = await mealService.deleteMealByIdInDB({ mealId: mealId as string });
         res.status(201).json(result);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        res.status(500).json({ message: error?.message || "Internal server error" });
     }
 }
 
 export const mealController = {
     getAllOrQueryMeal,
+    getAllFeaturedMeals,
     getMealById,
     getMealsByProviderId,
     createMeal,

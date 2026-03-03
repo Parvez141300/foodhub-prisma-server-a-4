@@ -17,6 +17,7 @@ const getProviderWithMenuFromDB = async (providerId: string) => {
         },
         include: {
             meals: true,
+            profile: true,
         }
     });
     return result;

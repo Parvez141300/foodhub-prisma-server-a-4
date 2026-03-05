@@ -7,7 +7,7 @@ const getUserWishListFromDB = async (userId: string) => {
         }
     });
 
-    if(!userData){
+    if (!userData) {
         throw new Error("This user not found");
         return;
     }
@@ -17,7 +17,32 @@ const getUserWishListFromDB = async (userId: string) => {
             user_id: userId
         },
         include: {
-            wishlistItems: true,
+            wishlistItems: {
+                include: {
+                    meal: {
+                        include: {
+                            category: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                }
+                            },
+                            cuisine: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                }
+                            },
+                            dietery: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                }
+                            },
+                        }
+                    }
+                }
+            },
         }
     });
 

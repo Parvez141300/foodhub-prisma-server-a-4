@@ -82,7 +82,11 @@ const getUserOrdersFromDB = async (user_id: string) => {
             user_id: user_id,
         },
         include: {
-            orderItems: true,
+            orderItems: {
+                include: {
+                    meal: true,
+                }
+            },
         }
     });
 

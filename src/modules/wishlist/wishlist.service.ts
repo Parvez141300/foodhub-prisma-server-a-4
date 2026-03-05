@@ -1,5 +1,29 @@
 import { prisma } from "../../lib/prisma";
 
+const getUserWishListFromDB = async (userId: string) => {
+    const userData = prisma.user.findUnique({
+        where: {
+            id: userId,
+        }
+    });
+
+    if(!userData){
+        throw new Error("This user not found");
+        return;
+    }
+
+    const result = await prisma.wishlist.findMany({
+        where: {
+            user_id: userId
+        },
+        include: {
+            wishlistItems: true,
+        }
+    });
+
+    return result;
+}
+
 const createWishListInDB = async (user_id: string, meal_id: string) => {
     const isExistUser = await prisma.user.findUnique({
         where: { id: user_id },
@@ -93,6 +117,7 @@ const deleteWishListItemFromDB = async ({ wishListId, user_id, meal_id }: { wish
 }
 
 export const wishListService = {
+    getUserWishListFromDB,
     createWishListInDB,
     deleteWishListItemFromDB,
 }

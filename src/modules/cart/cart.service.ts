@@ -1,5 +1,29 @@
 import { prisma } from "../../lib/prisma";
 
+const getUserCartFromDB = async (userId: string) => {
+    const userData = prisma.user.findUnique({
+        where: {
+            id: userId,
+        }
+    });
+
+    if(!userData){
+        throw new Error("This user not found");
+        return;
+    }
+
+    const result = await prisma.cart.findMany({
+        where: {
+            user_id: userId
+        },
+        include: {
+            cartItems: true,
+        }
+    });
+
+    return result;
+}
+
 const createCartInDB = async (payload: {
     user_id: string;
     meal_id: string;
@@ -120,6 +144,7 @@ const deleteCartItemFromDB = async ({ cartId, user_id, meal_id }: { cartId: stri
 }
 
 export const cartService = {
+    getUserCartFromDB,
     createCartInDB,
     deleteCartItemFromDB,
 }

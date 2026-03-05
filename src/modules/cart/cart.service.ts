@@ -7,7 +7,7 @@ const getUserCartFromDB = async (userId: string) => {
         }
     });
 
-    if(!userData){
+    if (!userData) {
         throw new Error("This user not found");
         return;
     }
@@ -17,7 +17,32 @@ const getUserCartFromDB = async (userId: string) => {
             user_id: userId
         },
         include: {
-            cartItems: true,
+            cartItems: {
+                include: {
+                    meal: {
+                        include: {
+                            category: {
+                                select: {
+                                    id: true,
+                                    name: true
+                                }
+                            },
+                            cuisine: {
+                                select: {
+                                    id: true,
+                                    name: true
+                                }
+                            },
+                            dietery: {
+                                select: {
+                                    id: true,
+                                    name: true
+                                }
+                            },
+                        }
+                    }
+                }
+            },
         }
     });
 
@@ -126,7 +151,7 @@ const deleteCartItemFromDB = async ({ cartId, user_id, meal_id }: { cartId: stri
             id: meal_id,
         }
     });
-    if(!isExistMeal){
+    if (!isExistMeal) {
         throw new Error("Meal not found");
         return;
     }

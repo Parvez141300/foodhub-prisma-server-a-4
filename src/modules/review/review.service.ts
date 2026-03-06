@@ -5,6 +5,9 @@ const getAllReviewByMealIdFromDB = async (meal_id: string) => {
     const result = await prisma.review.findMany({
         where: {
             meal_id: meal_id,
+        },
+        include: {
+            user: true,
         }
     });
 

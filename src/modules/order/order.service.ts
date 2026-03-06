@@ -280,6 +280,19 @@ const updateOrderStatusInDB = async ({ order_id, provider_id, order_status }: { 
     return result;
 }
 
+const updateUserPendingOrderStatusInDB = async (orderId: string, orderStatus: Order_Status) => {
+    const result = await prisma.order.update({
+        where: {
+            id: orderId,
+        },
+        data: {
+            order_status: orderStatus
+        }
+    });
+
+    return result;
+}
+
 export const orderService = {
     getAllOrdersFromDB,
     getUserOrdersFromDB,
@@ -287,4 +300,5 @@ export const orderService = {
     getOrderDetailsFromDB,
     createOrderInDB,
     updateOrderStatusInDB,
+    updateUserPendingOrderStatusInDB,
 };

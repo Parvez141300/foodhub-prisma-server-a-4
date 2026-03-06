@@ -10,5 +10,6 @@ router.get("/orders", orderController.getUserOrders);
 router.get("/orders/:orderId", orderController.getOrderDetails);
 router.post("/orders", authMiddleware(UserRole.CUSTOMER), orderController.createOrder);
 router.patch("/provider/orders/:orderId", authMiddleware(UserRole.PROVIDER), orderController.updateOrderStatus);
+router.patch("/customer/orders/:orderId", authMiddleware(UserRole.CUSTOMER), orderController.updateUserPendingOrderStatus);
 
 export const orderRouter = router;

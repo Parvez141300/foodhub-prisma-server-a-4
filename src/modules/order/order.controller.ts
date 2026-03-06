@@ -61,6 +61,17 @@ const updateOrderStatus: RequestHandler = async (req, res) => {
     }
 }
 
+const updateUserPendingOrderStatus: RequestHandler = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { order_status } = req.body;
+        const result = await orderService.updateUserPendingOrderStatusInDB(orderId as string, order_status);
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+}
+
 export const orderController = {
     getAllOrders,
     getPoriderOrders,
@@ -68,4 +79,5 @@ export const orderController = {
     getOrderDetails,
     createOrder,
     updateOrderStatus,
+    updateUserPendingOrderStatus,
 };

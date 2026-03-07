@@ -1,13 +1,18 @@
 import { prisma } from "../../lib/prisma";
 import { Review } from "../../../generated/prisma/client";
 
-const getAllReviewByMealIdFromDB = async (meal_id: string) => {
-    const result = await prisma.review.findMany({
+const getAllReviewByMealIdFromDB = async (mealId: string) => {
+    
+    const result = await prisma.meal.findUnique({
         where: {
-            meal_id: meal_id,
+            id: mealId,
         },
         include: {
-            user: true,
+            reviews: {
+                include: {
+                    user: true
+                }
+            }
         }
     });
 

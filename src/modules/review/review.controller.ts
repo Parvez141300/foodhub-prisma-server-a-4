@@ -3,8 +3,8 @@ import { reviewService } from "./review.service";
 
 const getAllReviewByMealId: RequestHandler = async (req, res) => {
     try {
-        const { meaId } = req.params;
-        const result = await reviewService.getAllReviewByMealIdFromDB(meaId as string);
+        const { mealId } = req.params;
+        const result = await reviewService.getAllReviewByMealIdFromDB(mealId as string);
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

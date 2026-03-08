@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/orders", orderController.getAllOrders);
 router.get("/provider/orders/:providerId", orderController.getPoriderOrders);
-router.get("/orders", orderController.getUserOrders);
+router.get("/customer/orders", orderController.getUserOrders);
 router.get("/orders/:orderId", orderController.getOrderDetails);
 router.post("/orders", authMiddleware(UserRole.CUSTOMER), orderController.createOrder);
 router.patch("/provider/orders/:orderId", authMiddleware(UserRole.PROVIDER), orderController.updateOrderStatus);

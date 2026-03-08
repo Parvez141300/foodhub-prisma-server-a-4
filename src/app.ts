@@ -13,7 +13,7 @@ import { dietaryRouter } from "./modules/dietery/dietery.route";
 import { cartRouter } from "./modules/cart/cart.route";
 import { wishListRouter } from "./modules/wishlist/wishlist.route";
 
-export const app = express();
+const app = express();
 
 // middlewares
 
@@ -40,3 +40,5 @@ app.use("/api", wishListRouter);
 app.get('/', (req, res) => {
   res.send('FoodHub server is running');
 });
+
+export default app;

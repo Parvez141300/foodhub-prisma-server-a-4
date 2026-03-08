@@ -79,7 +79,7 @@ const getUserOrdersFromDB = async (user_id: string) => {
 
     const result = await prisma.order.findMany({
         where: {
-            user_id: user_id,
+            user_id: user_id
         },
         include: {
             orderItems: {
@@ -107,6 +107,7 @@ const getOrderDetailsFromDB = async (order_id: string) => {
 }
 
 const createOrderInDB = async (payload: CreateOrderPayloadType) => {
+    console.log('payload order data', payload);
     // find user
     const userData = await prisma.user.findUnique({
         where: { id: payload.user_id },
@@ -168,22 +169,10 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
                 total_price: total_price,
             }
         });
+        
+        // single meal order
         if (payload?.orderItems?.meal_id) {
-            // create order
-            const order = await tx.order.create({
-                data: {
-                    user_id: payload.user_id,
-                    name: payload.name,
-                    phone: payload.phone,
-                    division: payload.division,
-                    district: payload.district,
-                    thana: payload.thana,
-                    area: payload.area,
-                    street: payload.street || "",
-                    postal_code: payload.postal_code || "",
-                    total_price: total_price,
-                }
-            });
+            
             // create order item
             const orderItemData = {
                 order_id: order?.id,
@@ -206,23 +195,10 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
                 }
             });
         }
+
+        // cart meal order
         if (payload?.cartItems?.length) {
-            // create order
-            const order = await tx.order.create({
-                data: {
-                    user_id: payload.user_id,
-                    cart_id: payload.cart_id || null,
-                    name: payload.name,
-                    phone: payload.phone,
-                    division: payload.division,
-                    district: payload.district,
-                    thana: payload.thana,
-                    area: payload.area,
-                    street: payload.street || "",
-                    postal_code: payload.postal_code || "",
-                    total_price: total_price,
-                }
-            });
+            
             // order items array
             const cartItemData = payload.cartItems.map(item => (
                 {
@@ -247,7 +223,7 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
                         }
                     }
                 })
-            }
+            };
         }
 
 

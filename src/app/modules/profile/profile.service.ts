@@ -1,4 +1,4 @@
-import { Profile } from "../../generated/prisma/client";
+import { Profile } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 

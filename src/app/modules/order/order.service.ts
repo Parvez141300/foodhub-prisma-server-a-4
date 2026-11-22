@@ -1,5 +1,5 @@
 
-import { Order_Status } from "../../generated/prisma/enums";
+import { Order_Status } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 type CreateOrderPayloadType = {

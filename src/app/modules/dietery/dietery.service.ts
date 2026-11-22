@@ -1,4 +1,4 @@
-import { Dietery } from "../../generated/prisma/client";
+import { Dietery } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const getAllDietaryFromDB = async () => {

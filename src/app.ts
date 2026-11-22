@@ -1,17 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "./lib/auth";
-import { mealRouter } from "./modules/meal/meal.route";
-import { categoryRouter } from "./modules/category/category.route";
-import { userRouter } from "./modules/user/user.route";
-import { orderRouter } from "./modules/order/order.route";
-import { reviewRouter } from "./modules/review/review.route";
-import { profileRouter } from "./modules/profile/profile.route";
-import { cuisineRouter } from "./modules/cuisine/cuisine.route";
-import { dietaryRouter } from "./modules/dietery/dietery.route";
-import { cartRouter } from "./modules/cart/cart.route";
-import { wishListRouter } from "./modules/wishlist/wishlist.route";
+import { auth } from "./app/lib/auth";
+import { mealRouter } from "./app/modules/meal/meal.route";
+import { categoryRouter } from "./app/modules/category/category.route";
+import { userRouter } from "./app/modules/user/user.route";
+import { orderRouter } from "./app/modules/order/order.route";
+import { reviewRouter } from "./app/modules/review/review.route";
+import { profileRouter } from "./app/modules/profile/profile.route";
+import { cuisineRouter } from "./app/modules/cuisine/cuisine.route";
+import { dietaryRouter } from "./app/modules/dietery/dietery.route";
+import { cartRouter } from "./app/modules/cart/cart.route";
+import { wishListRouter } from "./app/modules/wishlist/wishlist.route";
 
 const app = express();
 

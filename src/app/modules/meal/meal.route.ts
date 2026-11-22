@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { mealController } from "./meal.controller";
-import authMiddleware, { UserRole } from "../../middleware/authMiddleware";
+import authMiddleware, { UserRole } from "../../../middleware/authMiddleware";
 
 
 const router = Router();

@@ -1,4 +1,4 @@
-import { Cuisine } from "../../generated/prisma/client"
+import { Cuisine } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma";
 
 const getAllCuisineFromDB = async () => {

@@ -36,6 +36,6 @@ export const auth = betterAuth({
 
     },
     trustedOrigins: [
-        envVars.FRONTEND_URL || envVars.BETTER_AUTH_BASE_URL || "http://localhost:3000" || "http://localhost:5000"
+        envVars.FRONTEND_URL || envVars.BACKEND_URL || "http://localhost:3000" || "http://localhost:5000"
     ],
 });

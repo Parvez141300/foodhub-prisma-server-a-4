@@ -1,3 +1,4 @@
+import { UserRole } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
 
 
@@ -85,7 +86,7 @@ const updateUserStatusInDB = async ({ userId, payload }: { userId: string, paylo
     return result;
 }
 
-const updateUserRoleInDB = async ({userId, role}: {userId: string, role: string}) => {
+const updateUserRoleInDB = async ({userId, role}: {userId: string, role: UserRole}) => {
     const userData = await prisma.user.findUnique({
         where: {
             id: userId

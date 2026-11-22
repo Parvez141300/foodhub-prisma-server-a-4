@@ -11,6 +11,7 @@ interface IEnvVarialbleConfig {
     ADMIN_NAME: string;
     ADMIN_EMAIL: string;
     ADMIN_PASSWORD: string;
+    BETTER_AUTH_BASE_URL: string;
     BETTER_AUTH_SECRET: string;
 }
 
@@ -24,6 +25,7 @@ const loadEnvVariables = (): IEnvVarialbleConfig => {
         "ADMIN_NAME",
         "ADMIN_EMAIL",
         "ADMIN_PASSWORD",
+        "BETTER_AUTH_BASE_URL",
         "BETTER_AUTH_SECRET",
     ];
 
@@ -42,6 +44,7 @@ const loadEnvVariables = (): IEnvVarialbleConfig => {
         ADMIN_NAME: process.env.ADMIN_NAME as string,
         ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
         ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+        BETTER_AUTH_BASE_URL: process.env.BETTER_AUTH_BASE_URL as string,
         BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET as string,
     }
 }

@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 
 import { prisma } from "./prisma";
+import { envVars } from "../utils/env";
 
 
 export const auth = betterAuth({
@@ -33,5 +34,7 @@ export const auth = betterAuth({
         },
 
     },
-    trustedOrigins: [process.env.FRONTEND_URL || "http://localhost:3000"],
+    trustedOrigins: [
+        envVars.FRONTEND_URL || envVars.BETTER_AUTH_BASE_URL || "http://localhost:3000" || "http://localhost:5000"
+    ],
 });

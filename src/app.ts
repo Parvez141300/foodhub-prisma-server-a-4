@@ -1,3 +1,4 @@
+import { envVars } from "./app/utils/env";
 import express from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
@@ -18,7 +19,7 @@ const app = express();
 // middlewares
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: envVars.FRONTEND_URL || "http://localhost:3000",
   credentials: true,
 }));
 app.use(express.json());

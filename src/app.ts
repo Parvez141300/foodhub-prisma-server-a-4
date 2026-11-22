@@ -1,5 +1,5 @@
 import { envVars } from "./app/utils/env";
-import express from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./app/lib/auth";
@@ -14,7 +14,7 @@ import { dietaryRouter } from "./app/modules/dietery/dietery.route";
 import { cartRouter } from "./app/modules/cart/cart.route";
 import { wishListRouter } from "./app/modules/wishlist/wishlist.route";
 
-const app = express();
+export const app : Application = express();
 
 // middlewares
 
@@ -41,5 +41,3 @@ app.use("/api", wishListRouter);
 app.get('/', (req, res) => {
   res.send('FoodHub server is running');
 });
-
-export default app;

@@ -1,7 +1,7 @@
 
 import { envVars } from "./app/utils/env";
-import app from "./app";
 import { prisma } from "./app/lib/prisma";
+import { app } from "./app";
 
 
 const PORT= envVars.PORT || 5000;

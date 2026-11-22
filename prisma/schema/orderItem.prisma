@@ -1,0 +1,8 @@
+model OrderItem {
+    id       String @id @default(uuid())
+    order_id String
+    meal_id  String
+    quantity Int
+    order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+    meal     Meal   @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+}

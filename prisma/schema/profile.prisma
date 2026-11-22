@@ -1,0 +1,17 @@
+model Profile {
+    id      String @id @default(uuid())
+    user_id String @unique
+
+    phone       String
+    division    String
+    district    String
+    thana       String
+    area        String
+    street      String?
+    postal_code String?
+
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}

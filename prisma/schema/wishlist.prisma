@@ -1,0 +1,7 @@
+model Wishlist {
+    id      String @id @default(uuid())
+    user_id String @unique
+
+    created_at    DateTime       @default(now())
+    wishlistItems WishlistItem[]
+}

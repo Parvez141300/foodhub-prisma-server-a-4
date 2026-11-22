@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { Review } from "../../../generated/prisma/client";
+import { Review } from "../../generated/prisma/client";
 
 const getAllReviewByMealIdFromDB = async (mealId: string) => {
     

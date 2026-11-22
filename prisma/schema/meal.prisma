@@ -1,0 +1,27 @@
+model Meal {
+    id          String @id @default(uuid())
+    provider_id String
+    category_id String
+    cuisine_id  String
+    dietery_id  String
+
+    title        String   @db.VarChar(250)
+    description  String   @db.Text
+    stock        Int
+    price        Int
+    image_url    String
+    is_available Boolean  @default(true)
+    is_featured  Boolean  @default(false)
+    created_at   DateTime @default(now())
+    updated_at   DateTime @updatedAt
+
+    provider User     @relation(fields: [provider_id], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    cuisine  Cuisine  @relation(fields: [cuisine_id], references: [id], onDelete: Cascade)
+    dietery  Dietery  @relation(fields: [dietery_id], references: [id], onDelete: Cascade)
+
+    orderItems    OrderItem[]
+    reviews       Review[]
+    wishlistItems WishlistItem[]
+    cartItems     CartItem[]
+}

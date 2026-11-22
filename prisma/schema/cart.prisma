@@ -1,0 +1,9 @@
+model Cart {
+    id      String @id @default(uuid())
+    user_id String @unique
+
+    created_at DateTime   @default(now())
+    updated_at DateTime   @updatedAt
+    cartItems  CartItem[]
+    orders     Order[]
+}

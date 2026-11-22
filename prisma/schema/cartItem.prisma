@@ -1,0 +1,11 @@
+model CartItem {
+    id       String @id @default(uuid())
+    cart_id  String
+    meal_id  String
+    quantity Int
+
+    cart Cart @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+    meal Meal @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+
+    @@unique([cart_id, meal_id])
+}

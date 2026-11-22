@@ -1,0 +1,23 @@
+model Order {
+    id      String  @id @default(uuid())
+    user_id String
+    cart_id String?
+
+    // Address details
+    name        String
+    phone       String
+    division    String
+    district    String
+    thana       String
+    area        String
+    street      String?
+    postal_code String?
+
+    order_status Order_Status @default(PENDING)
+    total_price  Int
+    created_at   DateTime     @default(now())
+    orderItems   OrderItem[]
+
+    user User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    cart Cart? @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+}

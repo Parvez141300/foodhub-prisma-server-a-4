@@ -1,0 +1,10 @@
+model WishlistItem {
+    id          String @id @default(uuid())
+    wishlist_id String
+    meal_id     String
+
+    wishlist Wishlist @relation(fields: [wishlist_id], references: [id], onDelete: Cascade)
+    meal     Meal     @relation(fields: [meal_id], references: [id], onDelete: Cascade)
+
+    @@unique([wishlist_id, meal_id])
+}

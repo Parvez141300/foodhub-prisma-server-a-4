@@ -1,5 +1,5 @@
 import { prisma } from "../app/lib/prisma";
-import { UserRole } from "../middleware/authMiddleware";
+import { UserRole } from "../generated/prisma/enums";
 
 const seedAdmin = async () => {
     try {
@@ -18,11 +18,11 @@ const seedAdmin = async () => {
             throw new Error("User already exists!!!");
         }
 
-        const signUpAdmin = await fetch(`${process.env.BETTER_AUTH_URL}/api/auth/sign-up/email`, {
+        const signUpAdmin = await fetch(`${process.env.BACKEND_URL}/api/auth/sign-up/email`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Origin: process.env.APP_URL as string,
+                Origin: process.env.FRONTEND_URL as string,
             },
             body: JSON.stringify(adminData)
         });

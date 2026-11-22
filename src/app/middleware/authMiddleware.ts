@@ -1,6 +1,7 @@
 
 import { Request, Response, NextFunction } from "express";
 import { auth } from "../lib/auth";
+import { UserRole } from "../../generated/prisma/enums";
 
 declare global {
     namespace Express {
@@ -14,12 +15,6 @@ declare global {
             }
         }
     }
-}
-
-export enum UserRole {
-    CUSTOMER = "CUSTOMER",
-    PROVIDER = "PROVIDER",
-    ADMIN = "ADMIN",
 }
 
 const authMiddleware = (...roles: UserRole[]) => {

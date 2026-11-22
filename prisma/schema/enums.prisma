@@ -4,3 +4,9 @@ enum Order_Status {
     DELIVERED
     CANCELLED
 }
+
+enum UserRole {
+    ADMIN
+    PROVIDER
+    CUSTOMER
+}

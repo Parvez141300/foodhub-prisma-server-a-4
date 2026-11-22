@@ -33,5 +33,5 @@ export const auth = betterAuth({
         },
 
     },
-    trustedOrigins: [process.env.APP_URL || "http://localhost:3000"],
+    trustedOrigins: [process.env.FRONTEND_URL || "http://localhost:3000"],
 });

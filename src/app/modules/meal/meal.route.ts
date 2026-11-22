@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { mealController } from "./meal.controller";
-import authMiddleware, { UserRole } from "../../../middleware/authMiddleware";
+import authMiddleware from "../../middleware/authMiddleware";
+import { UserRole } from "../../../generated/prisma/enums";
 
 
 const router = Router();

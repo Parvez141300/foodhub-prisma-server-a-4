@@ -6,7 +6,7 @@ model User {
     image         String?
     createdAt     DateTime   @default(now())
     updatedAt     DateTime   @updatedAt
-    role          String?    @default("CUSTOMER")
+    role          UserRole?  @default(CUSTOMER)
     phone         String?
     is_active     String?    @default("ACTIVE")
     sessions      Session[]

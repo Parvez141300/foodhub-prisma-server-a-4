@@ -12,16 +12,16 @@ enum UserRole {
 }
 
 // Payment Gateway Enum
-enum PaymentGateway {
-  CASH_ON_DELIVERY
-  SSLCOMMERZ
+enum Payment_Gateway {
+    CASH_ON_DELIVERY
+    SSLCOMMERZ
 }
 
-enum PaymentStatus {
-  PENDING              // পেমেন্ট শুরু হয়নি / অপেক্ষমাণ
-  SUCCESS              // টাকা এসেছে (SSLCommerz VALID বা COD কালেক্টেড)
-  FAILED               // অনলাইন পেমেন্ট ব্যর্থ
-  CANCELLED            // ক্রেতা গেটওয়েতে বাতিল করেছে
-  REFUNDED             // সম্পূর্ণ ফেরত
-  PARTIALLY_REFUNDED   // আংশিক ফেরত (রাখতে চাইলে)
+enum Payment_Status {
+    PENDING // পেমেন্ট শুরু হয়নি / অপেক্ষমাণ
+    SUCCESS // টাকা এসেছে (SSLCommerz VALID বা COD কালেক্টেড)
+    FAILED // অনলাইন পেমেন্ট ব্যর্থ
+    CANCELLED // ক্রেতা গেটওয়েতে বাতিল করেছে
+    REFUNDED // সম্পূর্ণ ফেরত
+    PARTIALLY_REFUNDED // আংশিক ফেরত (রাখতে চাইলে)
 }

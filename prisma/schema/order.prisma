@@ -16,9 +16,20 @@ model Order {
     order_status Order_Status @default(PENDING)
     total_price  Int
 
-    created_at   DateTime     @default(now())
-    
-    orderItems   OrderItem[]
+    // ssl commerz or cash on delivery payment
+    payment_gateway Payment_Gateway?
+    payment_status  Payment_Status   @default(PENDING)
+
+    transaction_id  String?   @unique // আপনার নিজের tran_id
+    val_id          String? // SSLCommerz ভ্যালিডেশন আইডি
+    bank_tran_id    String? // রিফান্ডের জন্য লাগে
+    amount_paid     Int       @default(0) // this is because of cash on delivery system to check
+    refunded_amount Int       @default(0)
+    paid_at         DateTime?
+
+    created_at DateTime @default(now())
+
+    orderItems OrderItem[]
 
     user User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
     cart Cart? @relation(fields: [cart_id], references: [id], onDelete: Cascade)

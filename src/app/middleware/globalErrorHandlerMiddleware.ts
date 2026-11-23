@@ -2,7 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express';
 import { envVars } from '../utils/env';
 import status from 'http-status';
 
-export function globalErrorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+export function globalErrorHandlerMiddleware(err: Error, req: Request, res: Response, next: NextFunction) {
     if (envVars.NODE_ENV === "development") {
         console.log('this error is from global error handler middleware:', err);
     }

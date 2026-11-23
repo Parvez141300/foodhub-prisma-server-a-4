@@ -13,7 +13,8 @@ import { cuisineRouter } from "./app/modules/cuisine/cuisine.route";
 import { dietaryRouter } from "./app/modules/dietery/dietery.route";
 import { cartRouter } from "./app/modules/cart/cart.route";
 import { wishListRouter } from "./app/modules/wishlist/wishlist.route";
-import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { globalErrorHandlerMiddleware } from "./app/middleware/globalErrorHandlerMiddleware";
+import { notFoundMiddleware } from "./app/middleware/notFoundMiddleware";
 
 export const app : Application = express();
 
@@ -43,5 +44,7 @@ app.get('/', (req, res) => {
   res.send('FoodHub server is running');
 });
 
+// not found middelware
+app.use(notFoundMiddleware);
 // global error middleware
-app.use(globalErrorHandler);
+app.use(globalErrorHandlerMiddleware);

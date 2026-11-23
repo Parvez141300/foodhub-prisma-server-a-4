@@ -15,7 +15,9 @@ model Order {
 
     order_status Order_Status @default(PENDING)
     total_price  Int
+
     created_at   DateTime     @default(now())
+    
     orderItems   OrderItem[]
 
     user User  @relation(fields: [user_id], references: [id], onDelete: Cascade)

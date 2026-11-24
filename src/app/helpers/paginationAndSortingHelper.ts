@@ -6,8 +6,6 @@ type PaginationAndSortingOptions = {
     sort_order?: string;
 }
 
-
-
 export const paginationAndSortingHelper = (options: PaginationAndSortingOptions) => {
     const page = Number(options.page) || 1;
     const limit = Number(options.limit) || 10;
@@ -15,5 +13,11 @@ export const paginationAndSortingHelper = (options: PaginationAndSortingOptions)
     const sort_by = options.sort_by || "created_at";
     const sort_order = options.sort_order || "desc";
 
-    return { page, limit, skip, sort_by, sort_order };
+    return {
+        page,
+        limit,
+        skip,
+        sort_by,
+        sort_order
+    };
 }

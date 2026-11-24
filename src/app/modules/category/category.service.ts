@@ -1,8 +1,28 @@
 import { Category } from "../../../generated/prisma/client";
+import { CategoryWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
+import { IgetAllOrQueryCategoryPayload } from "./category.interface";
 
-const getAllCategoryFromDB = async () => {
+const getAllOrQueryCategoryFromDB = async (payload: IgetAllOrQueryCategoryPayload) => {
+    const { search, page, limit, skip, sort_by, sort_order } = payload;
+
+    const addCondition: CategoryWhereInput[] = [];
+
+    if (search) {
+        addCondition.push({
+            name: { contains: search, mode: "insensitive" }
+        })
+    }
+
     const result = await prisma.category.findMany({
+        where: {
+            AND: addCondition,
+        },
+        take: limit,
+        skip: skip,
+        orderBy: {
+            [sort_by]: sort_order,
+        },
         include: {
             creator: {
                 select: {
@@ -12,11 +32,22 @@ const getAllCategoryFromDB = async () => {
                 }
             }
         },
-        orderBy: {
-            created_at: "desc"
-        }
     });
-    return result;
+    const categoryCount = await prisma.category.count({
+        where: {
+            AND: addCondition,
+        }
+    })
+
+    return {
+        data: result,
+        pagination: {
+            page: page,
+            limit: limit,
+            total: categoryCount,
+            totalPage: Math.ceil(categoryCount / limit),
+        }
+    };
 }
 
 const createCategoryIntoDB = async (payload: Category) => {
@@ -55,7 +86,7 @@ const deleteCategoryFromDb = async (category_id: string) => {
 }
 
 export const categoryService = {
-    getAllCategoryFromDB,
+    getAllOrQueryCategoryFromDB,
     createCategoryIntoDB,
     deleteCategoryFromDb,
 }

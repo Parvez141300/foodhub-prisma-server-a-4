@@ -1,7 +1,11 @@
+import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
+import { IGetAllOrQueryUserCartPayload } from "./cart.interface";
 
-const getUserCartFromDB = async (userId: string) => {
-    const userData = prisma.user.findUnique({
+const getAllOrQueryUserCartFromDB = async (userId: string, payload: IGetAllOrQueryUserCartPayload) => {
+    const { search, page, limit, skip, sort_by, sort_order } = payload;
+
+    const userData = await prisma.user.findUnique({
         where: {
             id: userId,
         }
@@ -12,12 +16,22 @@ const getUserCartFromDB = async (userId: string) => {
         return;
     }
 
-    const result = await prisma.cart.findMany({
+    const mealSearch: MealWhereInput = search
+        ? { title: { contains: search, mode: 'insensitive' } }
+        : {};
+
+    const result = await prisma.cart.findFirst({
         where: {
-            user_id: userId
+            user_id: userId,
         },
         include: {
             cartItems: {
+                where: Object.keys(mealSearch).length ? { meal: mealSearch } : {},
+                take: limit,
+                skip: skip,
+                orderBy: {
+                    [sort_by]: sort_order,
+                },
                 include: {
                     meal: {
                         include: {
@@ -46,7 +60,21 @@ const getUserCartFromDB = async (userId: string) => {
         }
     });
 
-    return result;
+    const cartCount = await prisma.cartItem.count({
+        where: {
+            cart: { user_id: userId },
+        }
+    });
+
+    return {
+        data: result,
+        pagination: {
+            page: page,
+            limit: limit,
+            total: cartCount,
+            totalPage: Math.ceil(cartCount / limit),
+        }
+    };
 }
 
 const createCartInDB = async (payload: {
@@ -169,7 +197,7 @@ const deleteCartItemFromDB = async ({ cartId, user_id, meal_id }: { cartId: stri
 }
 
 export const cartService = {
-    getUserCartFromDB,
+    getAllOrQueryUserCartFromDB,
     createCartInDB,
     deleteCartItemFromDB,
 }

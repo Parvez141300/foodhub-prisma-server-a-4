@@ -1,15 +1,25 @@
 import { RequestHandler } from "express";
 import { cartService } from "./cart.service";
+import { catchAsync } from "../../middleware/catchAsync";
+import { paginationAndSortingHelper } from "../../helpers/paginationAndSortingHelper";
 
-const getUserCart: RequestHandler = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const result = await cartService.getUserCartFromDB(userId as string);
-        res.status(201).json(result);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message || "Internal Server Error" });
-    }
-}
+const getAllOrQueryUserCart: RequestHandler = catchAsync(async (req, res) => {
+    const userId = req.user?.id;
+    const search = req.query.search;
+    const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
+    const result = await cartService.getAllOrQueryUserCartFromDB(
+        userId as string,
+        {
+            search: search as string,
+            page,
+            limit,
+            skip,
+            sort_by,
+            sort_order,
+        }
+    );
+    res.status(201).json(result);
+});
 
 const createCart: RequestHandler = async (req, res) => {
     try {
@@ -34,7 +44,7 @@ const deleteCartItem: RequestHandler = async (req, res) => {
 }
 
 export const cartController = {
-    getUserCart,
+    getAllOrQueryUserCart,
     createCart,
     deleteCartItem,
 }

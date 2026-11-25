@@ -4,6 +4,8 @@ model CartItem {
     meal_id  String
     quantity Int
 
+    created_at DateTime @default(now())
+
     cart Cart @relation(fields: [cart_id], references: [id], onDelete: Cascade)
     meal Meal @relation(fields: [meal_id], references: [id], onDelete: Cascade)
 

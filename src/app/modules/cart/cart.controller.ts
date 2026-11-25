@@ -21,27 +21,19 @@ const getAllOrQueryUserCart: RequestHandler = catchAsync(async (req, res) => {
     res.status(201).json(result);
 });
 
-const createCart: RequestHandler = async (req, res) => {
-    try {
-        const payload = req.body;
-        const result = await cartService.createCartInDB(payload);
-        res.status(200).json(result);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message || "Internal Server Error" });
-    }
-}
+const createCart: RequestHandler = catchAsync(async (req, res) => {
+    const payload = req.body;
+    const result = await cartService.createCartInDB(payload);
+    res.status(200).json(result);
+});
 
-const deleteCartItem: RequestHandler = async (req, res) => {
-    try {
-        const { cartId } = req.params;
-        const { user_id, meal_id } = req.body;
+const deleteCartItem: RequestHandler = catchAsync(async (req, res) => {
+    const { cartId } = req.params;
+    const { user_id, meal_id } = req.body;
 
-        const result = await cartService.deleteCartItemFromDB({ cartId: cartId as string, user_id, meal_id });
-        res.status(200).json(result);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message || "Internal Server Error" });
-    }
-}
+    const result = await cartService.deleteCartItemFromDB({ cartId: cartId as string, user_id, meal_id });
+    res.status(200).json(result);
+});
 
 export const cartController = {
     getAllOrQueryUserCart,

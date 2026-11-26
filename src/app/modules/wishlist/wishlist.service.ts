@@ -1,6 +1,10 @@
+import { MealWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
+import { IGetAllOrQueryUserWishlistPayload } from "./wishlist.interface";
 
-const getUserWishListFromDB = async (userId: string) => {
+const getAllOrQueryUserWishlistFromDB = async (userId: string, payload: IGetAllOrQueryUserWishlistPayload) => {
+    const { search, page, limit, skip, sort_by, sort_order } = payload;
+
     const userData = prisma.user.findUnique({
         where: {
             id: userId,
@@ -12,12 +16,21 @@ const getUserWishListFromDB = async (userId: string) => {
         return;
     }
 
-    const result = await prisma.wishlist.findMany({
+    const mealSearch: MealWhereInput = search ?
+        { title: { contains: search, mode: "insensitive" } } :
+        {};
+
+    const result = await prisma.wishlist.findFirst({
         where: {
             user_id: userId
         },
         include: {
             wishlistItems: {
+                where: {
+                    meal: mealSearch,
+                },
+                take: limit,
+                skip: skip,
                 include: {
                     meal: {
                         include: {
@@ -46,7 +59,23 @@ const getUserWishListFromDB = async (userId: string) => {
         }
     });
 
-    return result;
+    const cartItemCount = await prisma.cartItem.count({
+        where: {
+            cart: {
+                user_id: userId,
+            }
+        }
+    });
+
+    return {
+        data: result,
+        pagination: {
+            page: page,
+            limit: limit,
+            total: cartItemCount,
+            totalPage: Math.ceil(cartItemCount / limit),
+        }
+    };
 }
 
 const createWishListInDB = async (user_id: string, meal_id: string) => {
@@ -142,7 +171,7 @@ const deleteWishListItemFromDB = async ({ wishListId, user_id, meal_id }: { wish
 }
 
 export const wishListService = {
-    getUserWishListFromDB,
+    getAllOrQueryUserWishlistFromDB,
     createWishListInDB,
     deleteWishListItemFromDB,
 }

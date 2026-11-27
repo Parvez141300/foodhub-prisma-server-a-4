@@ -16,7 +16,8 @@ router.post(
     wishListController.createWishList
 );
 router.delete(
-    "/wishlist/:wishListId", 
+    "/wishlist/:wishListId",
+    authMiddleware(UserRole.CUSTOMER),
     wishListController.deleteWishListItem
 );
 

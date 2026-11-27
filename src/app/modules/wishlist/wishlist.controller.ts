@@ -31,6 +31,7 @@ const createWishList: RequestHandler = catchAsync(async (req, res) => {
 
 const deleteWishListItem: RequestHandler = catchAsync(async (req, res) => {
     const userId = req.user?.id;
+    console.log("useid", userId);
     const { wishListId } = req.params;
     const { meal_id } = req.body;
     const result = await wishListService.deleteWishListItemFromDB({ wishListId: wishListId as string, user_id: userId as string, meal_id });

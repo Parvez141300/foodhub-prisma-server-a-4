@@ -1,6 +1,8 @@
 
 import { Order_Status } from "../../../generated/prisma/enums";
+import { OrderWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
+import { IGetAllOrQueryOrderPayload } from "./order.interface";
 
 type CreateOrderPayloadType = {
     user_id: string;
@@ -64,34 +66,86 @@ const getPoriderOrdersFromDB = async (providerId: string) => {
     return orders;
 }
 
-const getUserOrdersFromDB = async (user_id: string) => {
+const getAllOrQueryUserOrdersFromDB = async (userId: string, payload: IGetAllOrQueryOrderPayload) => {
+    const { search, page, limit, skip, sort_by, sort_order } = payload;
+
     const userData = await prisma.user.findUnique({
         where: {
-            id: user_id
+            id: userId
         },
         select: {
             id: true,
         }
     });
-    if (userData?.id !== user_id) {
-        return { message: "this user is not valid" }
+
+    if (userData?.id !== userId) {
+        return { message: "this user is not valid" };
+    }
+
+    // search filter
+    const searchFilter: OrderWhereInput = search
+        ? {
+            OR: [
+                { name: { contains: search, mode: "insensitive" } },
+                { phone: { contains: search, mode: "insensitive" } },
+                { transaction_id: { contains: search, mode: "insensitive" } },
+                {
+                    orderItems: {
+                        some: {
+                            meal: {
+                                title: { contains: search, mode: "insensitive" },
+                            },
+                        },
+                    },
+                },
+            ],
+        }
+        : {};
+
+    const where: OrderWhereInput = {
+        user_id: userId,
+        ...searchFilter,
     };
 
+    // sort validation
+    const ALLOWED_SORT_FIELDS = ["created_at", "total_price", "order_status"] as const;
+
+    const sortField = (ALLOWED_SORT_FIELDS as readonly string[]).includes(sort_by)
+        ? sort_by
+        : "created_at";
+
+    const sortOrder: "asc" | "desc" = sort_order === "asc" ? "asc" : "desc";
+
     const result = await prisma.order.findMany({
-        where: {
-            user_id: user_id
+        where,
+        skip,
+        take: limit,
+        orderBy: {
+            [sortField]: sortOrder,
         },
         include: {
             orderItems: {
                 include: {
                     meal: true,
-                }
+                },
             },
-        }
+        },
     });
 
-    return result;
-}
+    const totalOrders = await prisma.order.count({
+        where,
+    });
+
+    return {
+        data: result,
+        pagination: {
+            page: page,
+            limit: limit,
+            total: totalOrders,
+            totalPage: Math.ceil(totalOrders / limit),
+        },
+    };
+};
 
 const getOrderDetailsFromDB = async (order_id: string) => {
     const result = await prisma.order.findUnique({
@@ -169,10 +223,10 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
                 total_price: total_price,
             }
         });
-        
+
         // single meal order
         if (payload?.orderItems?.meal_id) {
-            
+
             // create order item
             const orderItemData = {
                 order_id: order?.id,
@@ -198,7 +252,7 @@ const createOrderInDB = async (payload: CreateOrderPayloadType) => {
 
         // cart meal order
         if (payload?.cartItems?.length) {
-            
+
             // order items array
             const cartItemData = payload.cartItems.map(item => (
                 {
@@ -271,7 +325,7 @@ const updateUserPendingOrderStatusInDB = async (orderId: string, orderStatus: Or
 
 export const orderService = {
     getAllOrdersFromDB,
-    getUserOrdersFromDB,
+    getAllOrQueryUserOrdersFromDB,
     getPoriderOrdersFromDB,
     getOrderDetailsFromDB,
     createOrderInDB,

@@ -31,6 +31,9 @@ const getAllOrQueryUserWishlistFromDB = async (userId: string, payload: IGetAllO
                 },
                 take: limit,
                 skip: skip,
+                orderBy: {
+                    [sort_by] : sort_order,
+                },
                 include: {
                     meal: {
                         include: {

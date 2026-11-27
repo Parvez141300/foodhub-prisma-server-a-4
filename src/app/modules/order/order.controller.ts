@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { orderService } from "./order.service";
+import { paginationAndSortingHelper } from "../../helpers/paginationAndSortingHelper";
 
 const getAllOrders: RequestHandler = async (req, res) => {
     try {
@@ -20,10 +21,22 @@ const getPoriderOrders: RequestHandler = async (req, res) => {
     }
 }
 
-const getUserOrders: RequestHandler = async (req, res) => {
+const getAllOrQueryUserOrders: RequestHandler = async (req, res) => {
     try {
-        const { user_id } = req.query;
-        const result = await orderService.getUserOrdersFromDB(user_id as string)
+        const userId = req.user!.id;
+        const search = req.query.search ? req.query.search : "";
+        const { page, limit, skip, sort_by, sort_order } = paginationAndSortingHelper(req.query);
+        const result = await orderService.getAllOrQueryUserOrdersFromDB(
+            userId as string,
+            {
+                search: search as string,
+                page,
+                limit,
+                skip,
+                sort_by,
+                sort_order,
+            });
+
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message || "Internal server error" });
@@ -75,7 +88,7 @@ const updateUserPendingOrderStatus: RequestHandler = async (req, res) => {
 export const orderController = {
     getAllOrders,
     getPoriderOrders,
-    getUserOrders,
+    getAllOrQueryUserOrders,
     getOrderDetails,
     createOrder,
     updateOrderStatus,
